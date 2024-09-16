@@ -1,4 +1,4 @@
-# Prácticas de TPI del curso 2023-24
+# Prácticas de TPI del curso 2024-25
 
 - [Enunciado de la Práctica 1](./enunciados/practica1/practica1.md) ([English](./enunciados/practica1/practica1_en.md))
     
