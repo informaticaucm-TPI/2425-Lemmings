@@ -1,0 +1,12 @@
+h
+help
+noExiste
+none
+r
+reset
+
+help
+n
+e
+exit
+
