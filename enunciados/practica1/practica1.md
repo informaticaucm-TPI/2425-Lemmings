@@ -1,6 +1,6 @@
 # Práctica 1: Lemmings
 
-**Entrega: Semana del 7 de octubre**
+**Entrega: Semana del 14 de octubre**
  
 **Objetivos:** Iniciación a la orientación a objetos y a Java; uso de arrays y enumerados; manipulación de cadenas con la clase `String`; entrada y salida por consola.
 
