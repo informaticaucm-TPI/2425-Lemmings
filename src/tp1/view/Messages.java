@@ -86,11 +86,6 @@ public class Messages {
 	public static final String COMMAND_HELP_SHORTCUT = "h";
 	public static final String COMMAND_HELP_DETAILS = "[h]elp";
 	public static final String COMMAND_HELP_HELP = "shows this help";
-	
-	public static final String COMMAND_LIST_NAME = "list";
-	public static final String COMMAND_LIST_SHORTCUT = "l";
-	public static final String COMMAND_LIST_DETAILS = "[l]ist";
-	public static final String COMMAND_LIST_HELP = "prints the list of current lemming actions";
 
 //Symbols
 	public static final String EMPTY = "";
@@ -98,30 +93,5 @@ public class Messages {
 	public static final String EXIT_DOOR = "🚪";
 	public static final String LEMMING_RIGHT = "B";
 	public static final String LEMMING_LEFT = "ᗺ";
-	public static final String LEMMING_PARACHUTE = "🪂";
-	public static final String LEMMING_BLOCKING = "¯\\ツ/¯";
-	public static final String LEMMING_DOWN_CAVING = "´･ω･`";
-
-//Actions
-	public static final String WALKER_ACTION_SYMBOL = "W";
-	public static final String WALKER_ACTION_DESCRIPTION = "Walker";
-	public static final String WALKER_ACTION_DETAILS = "[W]alker";
-	public static final String WALKER_ACTION_HELP = "Lemming that walks";
-
-	public static final String PARACHUTE_ACTION_SYMBOL = "P";
-	public static final String PARACHUTE_ACTION_DESCRIPTION = "Parachuter";
-	public static final String PARACHUTE_ACTION_DETAILS = "[P]arachuter";
-	public static final String PARACHUTE_ACTION_HELP = "Lemming falls with a parachute";
-
-	public static final String DOWN_CAVING_ACTION_SYMBOL = "DC";
-	public static final String DOWN_CAVING_ACTION_DESCRIPTION = "Down Caving";
-	public static final String DOWN_CAVINGE_ACTION_DETAILS = "[D]own [C]aving";
-	public static final String DOWN_CAVING_ACTION_HELP = "Lemming caves downwards";
-
-	public static final String BLOCKING_ACTION_SYMBOL = "B";
-	public static final String BLOCKING_ACTION_DESCRIPTION = "Blocking";
-	public static final String BLOCKING_ACTION_DETAILS = "[B]locking";
-	public static final String BLOCKING_ACTION_HELP = "Lemming blocks other lemmings";
-
 
 }
