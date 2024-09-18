@@ -20,7 +20,8 @@ Lemmings exit door: 0 ┃2
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
 
-Command > DEBUG: command=
+Command > [DEBUG] Executing: 
+
 Number of cycles: 1
 Lemmings in board: 4
 Dead lemmings: 0
@@ -41,7 +42,8 @@ Lemmings exit door: 0 ┃2
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
 
-Command > DEBUG: command=n
+Command > [DEBUG] Executing: n
+
 Number of cycles: 2
 Lemmings in board: 4
 Dead lemmings: 0
@@ -62,7 +64,8 @@ Lemmings exit door: 0 ┃2
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
 
-Command > DEBUG: command=none
+Command > [DEBUG] Executing: none
+
 Number of cycles: 3
 Lemmings in board: 4
 Dead lemmings: 0
@@ -83,7 +86,8 @@ Lemmings exit door: 0 ┃2
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
 
-Command > DEBUG: command=
+Command > [DEBUG] Executing: 
+
 Number of cycles: 4
 Lemmings in board: 3
 Dead lemmings: 1
@@ -104,7 +108,8 @@ Lemmings exit door: 0 ┃2
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
 
-Command > DEBUG: command=n
+Command > [DEBUG] Executing: n
+
 Number of cycles: 5
 Lemmings in board: 3
 Dead lemmings: 1
@@ -125,7 +130,8 @@ Lemmings exit door: 0 ┃2
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
 
-Command > DEBUG: command=none
+Command > [DEBUG] Executing: none
+
 Number of cycles: 6
 Lemmings in board: 3
 Dead lemmings: 1
@@ -146,7 +152,8 @@ Lemmings exit door: 0 ┃2
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
 
-Command > DEBUG: command=none
+Command > [DEBUG] Executing: none
+
 Number of cycles: 7
 Lemmings in board: 3
 Dead lemmings: 1
@@ -167,7 +174,8 @@ Lemmings exit door: 0 ┃2
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
 
-Command > DEBUG: command=
+Command > [DEBUG] Executing: 
+
 Number of cycles: 8
 Lemmings in board: 2
 Dead lemmings: 2
@@ -180,7 +188,7 @@ Lemmings exit door: 0 ┃2
   C┃                                                  ┃C
   D┃                                                  ┃D
   E┃          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         ┃E
-  F┃                     🚪ᗺ   ᗺ       ▓▓▓▓▓          ┃F
+  F┃                     ᗺ🚪   ᗺ       ▓▓▓▓▓          ┃F
   G┃                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ┃G
   H┃                                                  ┃H
   I┃                                        ▓▓▓▓▓     ┃I
@@ -188,7 +196,8 @@ Lemmings exit door: 0 ┃2
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
 
-Command > DEBUG: command=n
+Command > [DEBUG] Executing: n
+
 Number of cycles: 9
 Lemmings in board: 1
 Dead lemmings: 2
@@ -209,7 +218,8 @@ Lemmings exit door: 1 ┃2
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
 
-Command > DEBUG: command=none
+Command > [DEBUG] Executing: none
+
 Number of cycles: 10
 Lemmings in board: 0
 Dead lemmings: 2
