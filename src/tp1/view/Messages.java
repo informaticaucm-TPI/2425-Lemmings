@@ -32,15 +32,13 @@ public class Messages {
 
 	/* @formatter:off */
 	public static final String[] HELP_LINES = new String[] { "Available commands:",
+			"[n]one | \"\": skips cycle",
 			"[r]eset: start a new game",
 			"[h]elp: print this help message",
-			"[e]xit: end the execution of the game",
-			"[s]et[R]ole: sets the lemming role",
-			"[e]xit: end the execution of the game",
-			"[n]one | \"\": skips cycle"};
+			"[e]xit: end the execution of the game"};
 	/* @formatter:on */
 
-	public static final String HELP = String.join(System.lineSeparator(), HELP_LINES);
+	public static final String HELP = String.join(LINE_SEPARATOR+"   ", HELP_LINES) + LINE_SEPARATOR;
 	
 	public static final String UNKNOWN_COMMAND = "Unknown command";
 

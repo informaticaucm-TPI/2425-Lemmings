@@ -129,18 +129,11 @@ public class ConsoleView extends GameView {
 	@Override
 	public void showEndMessage() {
 		System.out.println(this.endMessage());
-		
-	}
-
-	@Override
-	public void showHelp() {
-		System.out.println(game.help());
 	}
 
 	@Override
 	public void showError(String message) {
-		System.out.println(message);
-		
+        System.out.println(Messages.ERROR.formatted(message));		
 	}
 	
 	@Override
@@ -159,7 +152,7 @@ public class ConsoleView extends GameView {
 		String line = scanner.nextLine();
 		String[] words = line.trim().split("\\s+");
 
-		System.out.println("DEBUG: command= "+line);
+        System.out.println(Messages.DEBUG.formatted(line));		
 
 		return words;
 	}

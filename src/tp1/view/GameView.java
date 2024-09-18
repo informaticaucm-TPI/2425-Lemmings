@@ -13,7 +13,6 @@ public abstract class GameView {
 	// show methods
 	public abstract void showWelcome();
 	public abstract void showGame();
-	public abstract void showHelp();
 	public abstract void showEndMessage();
 	public abstract void showError(String message);
 	public abstract void showMessage(String message);
