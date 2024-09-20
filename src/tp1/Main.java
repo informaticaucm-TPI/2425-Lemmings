@@ -18,8 +18,9 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		// Required to avoid issues with tests
-		Locale.of("es", "ES");
-		
+		// Locale.of("es", "ES");
+		// You can replace the following line by the previous line if using Java21
+		Locale.setDefault(new Locale("es", "ES"));
 		try {
 			
 			int nLevel = 1;
