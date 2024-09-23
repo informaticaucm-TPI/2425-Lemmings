@@ -1,5 +1,6 @@
 h
 help
+help con argumentosIncorrectos
 noExiste
 none
 r
@@ -9,6 +10,7 @@ r 1
 none
 r 0
 
+reset
 help
 n
 e

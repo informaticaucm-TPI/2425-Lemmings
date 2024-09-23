@@ -36,6 +36,10 @@ Available commands:
    [h]elp: print this help message
    [e]xit: end the execution of the game
 
+Command > [DEBUG] Executing: help con argumentosIncorrectos
+
+[ERROR] Error: Incorrect parameter number
+
 Command > [DEBUG] Executing: noExiste
 
 [ERROR] Error: Unknown command
@@ -130,6 +134,58 @@ Lemmings exit door: 0 ┃2
 
 Command > [DEBUG] Executing: r 1
 
+[ERROR] Error: Incorrect parameter number
+
+Command > [DEBUG] Executing: none
+
+Number of cycles: 2
+Lemmings in board: 4
+Dead lemmings: 0
+Lemmings exit door: 0 ┃2
+
+      1    2    3    4    5    6    7    8    9   10  
+   ┌——————————————————————————————————————————————————┐
+  A┃                                          ᗺ       ┃A
+  B┃                                        ▓▓▓▓▓▓▓▓▓▓┃B
+  C┃                                                  ┃C
+  D┃                      B    B                      ┃D
+  E┃          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         ┃E
+  F┃                     🚪            ▓▓▓▓▓          ┃F
+  G┃                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ┃G
+  H┃                                                  ┃H
+  I┃            B                           ▓▓▓▓▓     ┃I
+  J┃▓▓▓▓▓▓▓▓▓▓                              ▓▓▓▓▓▓▓▓▓▓┃J
+   └——————————————————————————————————————————————————┘
+      1    2    3    4    5    6    7    8    9   10  
+
+Command > [DEBUG] Executing: r 0
+
+[ERROR] Error: Incorrect parameter number
+
+Command > [DEBUG] Executing: 
+
+Number of cycles: 3
+Lemmings in board: 4
+Dead lemmings: 0
+Lemmings exit door: 0 ┃2
+
+      1    2    3    4    5    6    7    8    9   10  
+   ┌——————————————————————————————————————————————————┐
+  A┃                                     ᗺ            ┃A
+  B┃                                        ▓▓▓▓▓▓▓▓▓▓┃B
+  C┃                                                  ┃C
+  D┃                           B                      ┃D
+  E┃          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  B                      ┃E
+  F┃                     🚪            ▓▓▓▓▓          ┃F
+  G┃                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ┃G
+  H┃                                                  ┃H
+  I┃                                        ▓▓▓▓▓     ┃I
+  J┃▓▓▓▓▓▓▓▓▓▓  B                           ▓▓▓▓▓▓▓▓▓▓┃J
+   └——————————————————————————————————————————————————┘
+      1    2    3    4    5    6    7    8    9   10  
+
+Command > [DEBUG] Executing: reset
+
 Number of cycles: 0
 Lemmings in board: 4
 Dead lemmings: 0
@@ -150,7 +206,15 @@ Lemmings exit door: 0 ┃2
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
 
-Command > [DEBUG] Executing: none
+Command > [DEBUG] Executing: help
+
+Available commands:
+   [n]one | "": skips cycle
+   [r]eset: start a new game
+   [h]elp: print this help message
+   [e]xit: end the execution of the game
+
+Command > [DEBUG] Executing: n
 
 Number of cycles: 1
 Lemmings in board: 4
@@ -168,80 +232,6 @@ Lemmings exit door: 0 ┃2
   G┃                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ┃G
   H┃                                                  ┃H
   I┃       B                                ▓▓▓▓▓     ┃I
-  J┃▓▓▓▓▓▓▓▓▓▓                              ▓▓▓▓▓▓▓▓▓▓┃J
-   └——————————————————————————————————————————————————┘
-      1    2    3    4    5    6    7    8    9   10  
-
-Command > [DEBUG] Executing: r 0
-
-Number of cycles: 0
-Lemmings in board: 3
-Dead lemmings: 0
-Lemmings exit door: 0 ┃2
-
-      1    2    3    4    5    6    7    8    9   10  
-   ┌——————————————————————————————————————————————————┐
-  A┃                                               B  ┃A
-  B┃                                        ▓▓▓▓▓▓▓▓▓▓┃B
-  C┃                                                  ┃C
-  D┃            B                                     ┃D
-  E┃          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         ┃E
-  F┃                     🚪            ▓▓▓▓▓          ┃F
-  G┃                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ┃G
-  H┃                                                  ┃H
-  I┃  B                                     ▓▓▓▓▓     ┃I
-  J┃▓▓▓▓▓▓▓▓▓▓                              ▓▓▓▓▓▓▓▓▓▓┃J
-   └——————————————————————————————————————————————————┘
-      1    2    3    4    5    6    7    8    9   10  
-
-Command > [DEBUG] Executing: 
-
-Number of cycles: 1
-Lemmings in board: 3
-Dead lemmings: 0
-Lemmings exit door: 0 ┃2
-
-      1    2    3    4    5    6    7    8    9   10  
-   ┌——————————————————————————————————————————————————┐
-  A┃                                               ᗺ  ┃A
-  B┃                                        ▓▓▓▓▓▓▓▓▓▓┃B
-  C┃                                                  ┃C
-  D┃                 B                                ┃D
-  E┃          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         ┃E
-  F┃                     🚪            ▓▓▓▓▓          ┃F
-  G┃                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ┃G
-  H┃                                                  ┃H
-  I┃       B                                ▓▓▓▓▓     ┃I
-  J┃▓▓▓▓▓▓▓▓▓▓                              ▓▓▓▓▓▓▓▓▓▓┃J
-   └——————————————————————————————————————————————————┘
-      1    2    3    4    5    6    7    8    9   10  
-
-Command > [DEBUG] Executing: help
-
-Available commands:
-   [n]one | "": skips cycle
-   [r]eset: start a new game
-   [h]elp: print this help message
-   [e]xit: end the execution of the game
-
-Command > [DEBUG] Executing: n
-
-Number of cycles: 2
-Lemmings in board: 3
-Dead lemmings: 0
-Lemmings exit door: 0 ┃2
-
-      1    2    3    4    5    6    7    8    9   10  
-   ┌——————————————————————————————————————————————————┐
-  A┃                                          ᗺ       ┃A
-  B┃                                        ▓▓▓▓▓▓▓▓▓▓┃B
-  C┃                                                  ┃C
-  D┃                      B                           ┃D
-  E┃          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         ┃E
-  F┃                     🚪            ▓▓▓▓▓          ┃F
-  G┃                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ┃G
-  H┃                                                  ┃H
-  I┃            B                           ▓▓▓▓▓     ┃I
   J┃▓▓▓▓▓▓▓▓▓▓                              ▓▓▓▓▓▓▓▓▓▓┃J
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
