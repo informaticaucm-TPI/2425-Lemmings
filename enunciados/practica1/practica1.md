@@ -37,7 +37,7 @@ For each of the TP assigmments, all the submissions from all the different TP gr
 
 Lemmings is a classic game, released at the beginning of the 90s, which had a big influence on the development of puzzle-strategy videogames. The object of the game is to guide the lemmings, which move independently of the player, to a designated exit, avoiding a number of obstacles. The player can assign skills/roles to individual lemmings allowing them to alter their environment or their own behaviour in order to help the group of lemmings to reach the exit. There have been many different versions of the game since its first release.
 
-![Screenshot of the classic version of the game (Source: www.smithsonianmag.com)](../imgs/Bitmap/Pr1/screenshot1.png)
+![Screenshot of the classic version of the game (Source: www.smithsonianmag.com)](imgs/Bitmap/Pr1/screenshot1.png)
 
 Our aim is to develop a simplified version of the classic game, though we may later introduce some novel features. The first and most obvious simplification is that our version will not have a GUI and will instead use a text-based interface. The second main simplfication is that the original game evolves in real time, i.e. the lemmings move constantly, independently of any actions that the player may take. The simplified game we develop here, however, evolves in cycles in each of which the game stops for the player to choose an action he or she wishes to perform, after which the state of the game is updated, taking into account the chosen action.
 
@@ -146,14 +146,14 @@ Available commands:
 [r]eset: start a new game
 [h]elp: print this help message
 [e]xit: end the execution of the game
-[n]one | "": skips cycle
+[n]one | "": skip a cycle
 ```
 
 - `reset`: Restarts the game in the initial configuration.
 
 - `exit`: Exits the game after displaying the message *Player leaves game*.
 
-- `none`: The game is updated.
+- `none`: updates the game.
 
 **Observations concerning the commands:**
 
@@ -175,11 +175,11 @@ You will find the required constants of type `String` already defined in the `Me
 
 # Application parameters
 
-In this first version of the game, boards will be stored in an ***ad-hoc*** manner via dedicated methods `initGameO()`, `initGame1()`..., one for each level, that place lemmings and walls in different positions.
+In this first version of the game, boards will be stored in an ***ad-hoc*** manner via dedicated methods `initGameO()`, `initGame1()`,... , one for each level, that place lemmings and walls in different positions.
 
 The program must accept an optional command-line parameter called **level**. In the example shown in the image, the level being loaded is level `1`, which is the level loaded by default if no command-line argument is provided. The `initGameO()` is the same but without the lemming in position `D3`. You may create other levels to implement tests, such as a test in which the player wins, a test in which some lemming remains blocked and the game doesn't terminate, etc. In future assignments, we will provide different worlds.
 
-![Execution options](../imgs/Bitmap/Pr1/args.png)
+![Execution options](imgs/Bitmap/Pr1/args.png)
 
 # 3. Implementation
 
@@ -190,7 +190,7 @@ code in different parts of a program makes it less maintainable, less readable a
 testable; modifying such a program is considerably more complicated and error-prone.
 In the second assignment, we will *refactorise* the code, improving it by
 introducing **inheritance** and **polymorphism**, two basic tools of
-object-oriented programming (OOP), thereby converting it into a \emph{bona fide}
+object-oriented programming (OOP), thereby converting it into a genuine
 object-oriented program and facilitating conformity with the DRY principle.
 
 The application is launched by executing the `tp1.Main` class so that you are advised to place all the classes you develop in the package `tp1` or subpackages of this package.
@@ -199,7 +199,7 @@ The application is launched by executing the `tp1.Main` class so that you are ad
 
 To represent one of the types of element that can appear on the board, referred to as game objects, you will need at least the following classes:
 
-- `Lemming`: objects of this class represent individual lemmings. The class has at least the following attributes: position `(column, row)`, a boolean attribute indicating if it is alive or not, an attribute storing its direction of movement, an attribute storing the force of a fall, as well as two attributes explained below: one called `role` of type `WalkerRole`, representing the current role of the lemming, and one called `game` of type `Game` (this class is presented below).
+- `Lemming`: objects of this class represent individual lemmings. The class has at least the following attributes: position on the board, a boolean attribute indicating if it is alive or not, an attribute storing its direction of movement, an attribute storing the force of a fall, as well as two attributes explained below: one called `role` of type `WalkerRole`, representing the current role of the lemming, and one called `game` of type `Game` (this class is presented below).
 
   The attribute of type `WalkerRole` represents the role of the lemming at that moment. The `Lemming` class will delegate many of its tasks to this attribute, enabling its behaviour and how it is displayed to be easily changed at run-time, simply by changing its value. However, in this assignment, the lemmings do not change role and the only role to be implemented is that of ***basic walker***.
 
@@ -221,14 +221,14 @@ SIMON: I have left this phrase without being translated until I have checked the
 The `WalkerRole` class needs the following methods:
 
 ```java
-    public void step( ) {...}
+    public void advance( ) {...}
 
     @Override
     public String toString( ) {...}
 ```
 <!-- <span style="color:red">**AE**: Al nombre sigo dandole vueltas: ¿execute?,¿playOneTurn?, ¿play?.</span> -->
 
-Since, by default, the lemming is a basic walker, the `move` method only needs to call the method of the lemming that implements the task of walking.
+Since, by default, the lemming is a basic walker, the `advance` method only needs to call the basic `move` method of the lemming.
 
 ### Updating the game objects
 
@@ -242,7 +242,7 @@ which updates the object in function of its current state and that of the rest o
 The update of a wall/floor does nothing (the method has an empty body). The update of a lemming must perform the following tasks:
 
 - Check if the lemming is alive 
-- Delegate to the `WalkerRole` by calling the `play` method which will call the walk method of the lemming, which will then carry out the following tasks:
+- Delegate to the `WalkerRole` by calling the `advance` method which will call the `move` method of the lemming, which will then carry out the following tasks:
     - If falling, manage the fall; in particular, die if a floor has been reached after a fall that is too big.
     - If in the air but not falling, fall.
     - If neither falling nor in the air, move normally. A normal move is either advancing one cell or changing direction.
@@ -283,9 +283,9 @@ Observe that these methods are overloaded, that is, they have the same name but 
 
 The container is also responsible for channeling the invocations made by the game to each of the game objects on the lists of objects that it manages.
 
-###  The 'model part of the application: the game
+###  The 'model' part of the application: the game
 
-The `Game` class encapsulates the logic of the game and contains an attribute whose value is an instance of the `GameObjectContainer` class. There will only be one instance of the `Game` class in the application which we will refer to as the `game`. The `Game` class also contains several counters: the cycle counter, the counter of the number of lemmings on the board,...
+The `Game` class encapsulates the logic of the game and contains an attribute whose value is an instance of the `GameObjectContainer` class. There will only be one instance of the `Game` class in the application which we will refer to as the `game` (we will also use `game` as the name of the attribute of any class that contains a reference to this object). The `Game` class also contains several counters: the cycle counter, the counter of the number of lemmings on the board,...
 
 The `Game` class contains a method `update` which updates the state of all the elements of the game, where this basically consists of incrementing the cycle number and invoking the `update` method of the `container` which, in turn, invokes the update method of each of the game objects.
 
