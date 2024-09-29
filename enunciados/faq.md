@@ -7,6 +7,8 @@
 
 El reset deberá resetear el mapa en *ejecución*. Por defecto el mapa en ejecución es el que hemos llamado 1, pero ten en cuenta que el mapa en ejecución se puede cambiar a través de los argumentos del programa. Por lo que si se ha iniciado con el mapa 0 el programa al resetear deberá mostrar el mapa 0.
 
+Se podría realizar(opcional) una extensión simple en el que dicho comando permita recibir un argumento entero con el número del mapa. De tal forma que si el número fuera correcto se cargaría el plano correspondiente a ese mapa y en caso contrario se indicaría con un mensaje de error. De esta forma se podría utilizar tanto el reset simple: `reset`, como el con nivel: `reset numMap`.
+
 ### La salida por consola muestra caracteres extraños, ¿qué ocurre?
 
 Lo más probable es que la codificación que esté usando Eclipse no sea UTF-8. Para cambiarla:
