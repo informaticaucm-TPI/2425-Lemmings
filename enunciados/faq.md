@@ -15,3 +15,9 @@ Lo más probable es que la codificación que esté usando Eclipse no sea UTF-8. 
 - Selecciona el proyecto y pulsa el botón derecho seleccionando la opción *Properties*. 
 - Elige el menú *Resource* y  comprueba que el valor de *Text File Encoding* es *UTF-8*. 
 - En caso contrario, selecciona dicha opción.
+
+### ¿Puedo llevar las posiciones separadas en dos valores: (columna, fila) o (fila, columna)?
+
+No, se os ha pedido expresamente que creeís una clase para manejar las posiciones `Position` y además que sea **inmutable**. El único método de la práctica que recibe las posiciones en **dos valores enteros** es el método `Game.positionToString(int col, int row)`.
+
+Si lo piensas como matriz el acceso estandar suele ser `(fila, columna)` y a futuro cuando nos refiramos a una posición del tablero desde la vista lo haremos a través de su fila y columna (en esta práctica no lo utilizamos). Pero, si lo piensas como puntos en el plano coordenadas `(x, y)` la `x` corresponde a las columnas y la `y` a las filas. Decide una representación interna en el *modelo* y mantenla a lo largo del proyecto. 
