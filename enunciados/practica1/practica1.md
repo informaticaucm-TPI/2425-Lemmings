@@ -212,18 +212,16 @@ Para representar cada uno de los tipos de elementos que pueden aparecer en el ta
 
 ### Rol `WalkerRole`
 
-Como hemos indicado antes esta clase será la responsable de ejecutar el role sobre el lemming y también la responsable de devolver el icono del lemming. En un futuro podrá ser responsable de más tareas y además nos permitirá, con la misma idea, implementar otros roles. Para realizar dichas tareas tendrá como atributo el lemming sobre el que se aplica el role y con el que interaccionará para implementar el role. El atributo de tipo `WalkerRole` representa el role del lemming, en este caso el role de ***caminante***. 
+Como hemos indicado antes esta clase será la responsable de ejecutar el rol sobre el lemming y también la responsable de devolver el icono del lemming. En un futuro podrá ser responsable de más tareas y además nos permitirá, con la misma idea, implementar otros roles. Para realizar dichas tareas solo es necesario implementar los siguientes métodos estáticos que reciben el lemming sobre el que se aplicará:  
 
-Para realizar dichas tareas solo es necesario implementar los métodos:
 
 ```java
-    public void play( ) {...}
-    @Override
-    public String toString( ) {...}
+    public static void play( Lemming lemming ) {...}
+    public static String getIcon( Lemming lemming ) {...}
 ```
 <!-- <span style="color:red">**AE**: Al nombre sigo dandole vueltas: ¿execute?,¿playOneTurn?, ¿play?.</span> -->
 
-Como por defecto el lemming ya es un caminante lo único que será necesario en la implementación del `WalkerRole` es llamar al método del lemming en el que has implementado la tarea de caminar. 
+El atributo de tipo `WalkerRole` que tendrá el lemming representa el rol del lemming, en este caso el único valor posible para dicho rol es el de ***caminante***. Como por defecto el lemming ya es un caminante lo único que será necesario en la implementación del `WalkerRole` es llamar al método del lemming en el que has implementado la tarea de caminar. 
 
 
 ### Update
@@ -239,7 +237,7 @@ La actualización de una pared/suelo es trivial (no hacer nada). Los lemmings, s
 
 - Comprobar que están vivos 
 - Delegar en el `WalkerRole` que llamará al método correspondiente de caminar del lemming, el cual realizará las siguientes tareas:
-    - Si están cayendo gestionar la caída. En particular, morir si alcanzan el suelo tras una caída demasiado grande.
+    - Si están cayendo gestionar la caída. En particular, morir si alcanzan el suelo tras una caída demasiado grande. Se considera que alcanza el suelo en el momento que se estrella con este. Por lo cual si está cayendo aparecerá justo encima del suelo para en la siguiente iteración aterrizar, que consistirá en morir o dar un paso.
     - Si no están cayendo pero están en el aire tendrán que caer.
     - Si no se dan ninguna de las situaciones anterirores dar un paso normal. El paso consistirá en avanzar o cambiar de dirección.
 
