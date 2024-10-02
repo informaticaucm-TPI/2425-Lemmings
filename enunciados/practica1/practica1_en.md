@@ -12,7 +12,7 @@ string handling with the `String` class; input-output on the console.
 <!-- TOC start -->
   * [Plagiarism](#control-de-copias)
 - [1. Description of the assignment](#1-description)
-  * [1.1 Introduction](#11-introducción)
+  * [1.1 Introduction](#11-introduction)
   * [1.2. Details](#12-detalles-sobre-la-práctica)
   * [1.3. Game objects](#13-objetos-del-juego)
 - [2. Organisation of the game](#2-organización-del-juego)
@@ -32,7 +32,7 @@ For each of the TP assigmments, all the submissions from all the different TP gr
 <!-- TOC --><a name="1-description"></a>
 # 1. Description of the assignment
 
-<!-- TOC --><a name="11-introducción"></a>
+<!-- TOC --><a name="11-introduction"></a>
 ## 1.1 Introduction
 
 Lemmings is a classic game, released at the beginning of the 90s, which had a big influence on the development of puzzle-strategy videogames. The object of the game is to guide the lemmings, which move independently of the player, to a designated exit, avoiding a number of obstacles. The player can assign skills/roles to individual lemmings allowing them to alter their environment or their own behaviour in order to help the group of lemmings to reach the exit. There have been many different versions of the game since its first release.
