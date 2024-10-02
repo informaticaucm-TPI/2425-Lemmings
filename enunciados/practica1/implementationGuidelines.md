@@ -59,7 +59,7 @@ The best way to approach large projects is to define small milestones in order t
 
 6. Review small details (number of cycles, number of lemmings,...) that you may not yet have implemented and add the rest of the commands.
 
-|***¡Que todo funcione correctamente!***|
+|***Check that everything works***|
 | :---: |
 
 ### [B] Basic walker
