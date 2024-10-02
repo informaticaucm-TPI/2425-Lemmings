@@ -1,6 +1,6 @@
-# Práctica 1 - Lemmings: Guía de implementación
+# Assignment 1 - Lemmings: Implementation Guidelines
 
-The purpose of this document is to help you implement Assignment 1. You are not obliged to use it.
+The purpose of these guidelines is to help you implement Assignment 1. You are not obliged to use them.
 
 ## Structure
 
