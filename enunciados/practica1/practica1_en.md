@@ -229,7 +229,9 @@ The `WalkerRole` class needs the following methods:
 ```
 <!-- <span style="color:red">**AE**: Al nombre sigo dandole vueltas: ¿execute?,¿playOneTurn?, ¿play?.</span> -->
 
-Since, by default, the lemming is a basic walker, the `advance` method only needs to call the basic `move` method of the lemming.
+Since, by default, the lemming is a basic walker, the `advance` method only needs to call the basic `move` method of the lemming that called it (i.e. the one passed to it as a parameter) [^1].
+
+[^1]: How does the invoking lemming object pass itself as a parameter to the `advance` method? By using `this`.
 
 ### Updating the game objects
 
