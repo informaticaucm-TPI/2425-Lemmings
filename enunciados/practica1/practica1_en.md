@@ -11,7 +11,7 @@ string handling with the `String` class; input-output on the console.
 
 <!-- TOC start -->
   * [Plagiarism](#control-de-copias)
-- [1. Description of the assignment](#1-descripción-de-la-práctica)
+- [1. Description of the assignment](1-description)
   * [1.1 Introduction](#11-introducción)
   * [1.2. Details](#12-detalles-sobre-la-práctica)
   * [1.3. Game objects](#13-objetos-del-juego)
@@ -29,7 +29,7 @@ string handling with the `String` class; input-output on the console.
 
 For each of the TP assigmments, all the submissions from all the different TP groups will be checked using anti-plagiarism software, firstly by comparing them all pairwise and secondly, by searching to see if any of their code is copied from other sources on the Internet. Any plagiarism detected will be reported to the *Comité de Actuación ante Copias* which, after interviewing the student or students in question, will decide whether further action is appropriate. This may include the opening of disciplinary proceedings with the relevant university authority (*Inspección de Servicios*).
 
-<!-- TOC --><a name="1-descripción-de-la-práctica"></a>
+<!-- TOC --><a name="1-description"></a>
 # 1. Description of the assignment
 
 <!-- TOC --><a name="11-introducción"></a>
