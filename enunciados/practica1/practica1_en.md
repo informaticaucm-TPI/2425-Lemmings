@@ -11,7 +11,7 @@ string handling with the `String` class; input-output on the console.
 
 <!-- TOC start -->
   * [Plagiarism](#control-de-copias)
-- [1. Description of the assignment](1-description)
+- [1. Description of the assignment](#1-description)
   * [1.1 Introduction](#11-introducción)
   * [1.2. Details](#12-detalles-sobre-la-práctica)
   * [1.3. Game objects](#13-objetos-del-juego)
