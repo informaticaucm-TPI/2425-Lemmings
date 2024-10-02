@@ -222,10 +222,10 @@ SIMON: I have left this phrase without being translated until I have checked the
 The `WalkerRole` class needs the following methods:
 
 ```java
-    public void advance( ) {...}
+    public void advance(Lemming lemmy) {...}
 
     @Override
-    public String toString( ) {...}
+    public String getIcon(Lemming lemmy) {...}
 ```
 <!-- <span style="color:red">**AE**: Al nombre sigo dandole vueltas: ¿execute?,¿playOneTurn?, ¿play?.</span> -->
 
