@@ -215,7 +215,7 @@ To represent one of the types of element that can appear on the board, referred 
 As indicated earlier, this class is responsible for executing the role-specific behaviour of the lemming and for returning its visual representation (its icon). In the first assignment, there is only one role so this class corresponds to the ***basic walker*** role.
 
 <!--
-SIMON: I have left this phrase without being translated until I have checked the solution. It would seem to be saying that the WalkerRole class has an attribute of type Lemming (as well as the Lemming class having an attribute of type WalkerRole)? If so, this strikes me as wierd and will lead to the creation of an unnecessarily large number of role objects. Is this a way of implementing an inner class without using inner classes? Wouldn't it be better for the lemming to pass 'this' to the 'play' method of the role?
+SIMON: I have left this phrase without being translated until I have checked the solution. It would seem to be saying that the WalkerRole class has an attribute of type Lemming (as well as the Lemming class having an attribute of type WalkerRole)? If so, this strikes me as wierd and will lead to the creation of an unnecessarily large number of role objects. Is this a way of implementing an inner class without using inner classes? Wouldn't it be better for the lemming to pass 'this' to the 'play' method of the role? Now implemented by passing this and then using a callback.
 "Para realizar dichas tareas tendrá como atributo el lemming sobre el que se aplica el role y con el que interaccionará para implementar el role."
 -->
 
@@ -225,7 +225,7 @@ The `WalkerRole` class needs the following methods:
     public void advance(Lemming lemmy) {...}
 
     @Override
-    public String getIcon(Lemming lemmy) {...}
+    public String getIcon() {...}
 ```
 <!-- <span style="color:red">**AE**: Al nombre sigo dandole vueltas: ¿execute?,¿playOneTurn?, ¿play?.</span> -->
 
