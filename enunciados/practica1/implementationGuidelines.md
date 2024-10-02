@@ -45,7 +45,7 @@ Once we have seen the structure of the solution, we ask...
 
 The best way to approach large projects is to define small milestones in order to divide the project into executable mini-projects so that each mini-project extends the previous one. It is convenient to divide each mini-project into small steps whose functionality can be tested. Along these lines, we suggest the following mini-projects, each with several steps:
 
-### [A] Show a board with various lemmings
+### [A] Display a board containing several lemmings
 	
 1. If the template doesn't compile, add the minimum amount of code needed to make it compile. For example, if an unimplemented method must return an object, for the moment, place the instruction `return null` in the method body and then execute (the compiler will help you).
 
