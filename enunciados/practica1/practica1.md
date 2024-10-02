@@ -212,12 +212,12 @@ Para representar cada uno de los tipos de elementos que pueden aparecer en el ta
 
 ### Rol `WalkerRole`
 
-Como hemos indicado antes esta clase será la responsable de ejecutar el rol sobre el lemming y también la responsable de devolver el icono del lemming. En un futuro podrá ser responsable de más tareas y además nos permitirá, con la misma idea, implementar otros roles. Para realizar dichas tareas solo es necesario implementar los siguientes métodos estáticos que reciben el lemming sobre el que se aplicará:  
+Como hemos indicado antes esta clase será la responsable de ejecutar el rol sobre el lemming y también la responsable de devolver el icono del lemming. En un futuro podrá ser responsable de más tareas y además nos permitirá, con la misma idea, implementar otros roles. Para realizar dichas tareas solo es necesario implementar los siguientes métodos que reciben el lemming sobre el que se aplicará:  
 
 
 ```java
-    public static void play( Lemming lemming ) {...}
-    public static String getIcon( Lemming lemming ) {...}
+    public void play( Lemming lemming ) {...}
+    public String getIcon( Lemming lemming ) {...}
 ```
 <!-- <span style="color:red">**AE**: Al nombre sigo dandole vueltas: ¿execute?,¿playOneTurn?, ¿play?.</span> -->
 
