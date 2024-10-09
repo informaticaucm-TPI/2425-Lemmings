@@ -16,6 +16,9 @@ public class ConsoleColorsAnsiCodes {
     public static final String ANSI_LBLUE  = "\u001B[38;2;53;149;240m";
     public static final String ANSI_LGREEN = "\u001B[38;2;17;245;120m";
     public static final String ANSI_GRAY   = "\u001B[38;2;176;174;174m";
+    public static final String ANSI_BROWN   = "\u001B[38;2;128;64;0m";
+    public static final String ANSI_RGB   = "\u001B[38;2;%s;%s;%sm";
+
 
     public static final String ANSI_RESET = "\u001B[0m";    
 
@@ -32,6 +35,8 @@ public class ConsoleColorsAnsiCodes {
     public static final String ANSI_LGREEN_BACKGROUND = "\u001B[48;2;17;245;120m";
     public static final String ANSI_GRAY_BACKGROUND   = "\u001B[48;2;176;174;174m";
     public static final String ANSI_ROSE_BACKGROUND   = "\u001B[48;2;255;151;203m";
+    public static final String ANSI_BROWN_BACKGROUND   = "\u001B[48;2;128;64;0m";
+    public static final String ANSI_RGB_BACKGROUND   = "\u001B[48;2;%s;%s;%sm";
 
     // Estos de abajo no funcionan en Eclipse
     public static final String ANSI_3FILAS = "\u001B[3B";   
