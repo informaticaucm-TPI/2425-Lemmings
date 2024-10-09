@@ -4,3 +4,4 @@
     
     - [Guía de implementación](./enunciados/practica1/guiaImplementacion.md) ([English](./enunciados/practica1/guiaImplementacion_en.md))
 
+- [Enunciado de la Práctica 2.1](./enunciados/practica2/practica2_1.md) ([English](./enunciados/practica2/practica2_1_en.md))
