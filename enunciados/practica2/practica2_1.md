@@ -51,7 +51,7 @@ En el patrón *Command* van a intervenir las siguientes entidades, las cuales ir
 - Los comandos concretos se corresponden con las acciones del usuario: `HelpCommand`, `ExitCommand`... 
 - Cada acción va a tener su propia clase y cada comando tendrá tres métodos básicos:
     - `protected boolean matchCommand(String)` comprueba si una acción introducida por teclado se corresponde con la del comando.
-    - `public Command parse(String[])` recibe como parámetro un array de Strings, que en esta práctica corresponden con la entrada proporcionada por el usuario, y en caso de que el array de Strings encaje con el commando  actual crea una instancia del comando, si no devolverá `null`.
+    - `public Command parse(String[])` recibe como parámetro un array de *strings*, que en esta práctica secorresponden con la entrada proporcionada por el usuario. En caso de que el array de *strings* encaje con el commando actual devuelve una instancia del comando; si no devolverá `null`.
     - `public void execute(Game, GameView)` ejecuta la acción del comando, modificando el juego y pidiendo a la vista que se actualice en los casos necesarios.   
 
 
@@ -142,13 +142,13 @@ Como hemos indicado anteriormente, todos los comandos heredan de la clase `Comma
 
 - El método `execute` realiza la acción sobre *game* y utiliza *gameView* para volver a dibujar el estado del juego (si procede). Más adelante puede ocurrir que la ejecución de un comando no tenga éxito, en cuyo caso se puede usar *gameView* para mostrar un mensaje de error.
 
-- El método `parse(String[])` cuando tiene éxito, los argumentos corresponden con el commando, devuelve una instancia del comando concreto, si no devuelve `null`. Como cada comando procesa sus propios parámetros, este método devolverá `this` o creará una nueva instancia de la misma clase en caso de que el comando tenga atributos de estado que hagan que su comportamiento sea distinto para cada instancia de la clase.
+- El método `parse(String[])` cuando tiene éxito, los argumentos corresponden con el commando, devuelve una instancia del comando concreto; si no devuelve `null`. Como cada comando procesa sus propios parámetros, este método devolverá `this` o creará una nueva instancia de la misma clase en caso de que el comando tenga atributos de estado que hagan que su comportamiento sea distinto para cada instancia de la clase.
 
 La clase abstracta `NoParamsCommand`, que hereda de `Command`, sirve para representar a todos los comandos que no necesitan parámetros, como ***help*** o ***reset***, y de la que heredarán, por lo tanto, comandos como `HelpCommand` o `ResetCommand`. Esta clase puede implementar el método `parse` porque todos esos comandos se *parsean* igual: basta comprobar que el usuario solamente ha introducido una palabra que coincide con el nombre o la abreviatura del comando, en cuyo caso se puede devolver `this`. Obviamente, la implementación de `execute` se tiene que posponer a los comandos concretos, de modo que la clase `NoParamsCommand` tiene que ser abstracta. 
 
 Fíjate también que para los comandos con parámetros no sería correcto que su método `parse` devuelva `this`, sino que es necesario devolver un nuevo comando del tipo correspondiente.[^3]
 
-[^3] No sería correcto porque el código sería *frágil*. Devolver `this` significa devolver siempre el objeto que está almacenado en el array `AVAILABLE_COMMANDS`, cambiando previamente el valor de los atributos si se trata de un comando con parámetros. Es decir, supone que solo puede existir un objeto de esta subclase de `Command` en el juego a la vez. Si se trata de un comando con parámetros (representado por un objeto con estado) esta suposición totalmente innecesaria podría invalidarse con una pequeña modificación de la aplicación, por ejemplo, al añadir una pila de comandos ya ejecutados para implementar un comando `undo`.
+[^3]: No sería correcto porque el código sería *frágil*. Devolver `this` significa devolver siempre el objeto que está almacenado en el array `AVAILABLE_COMMANDS`, cambiando previamente el valor de los atributos si se trata de un comando con parámetros. Es decir, supone que solo puede existir un objeto de esta subclase de `Command` en el juego a la vez. Si se trata de un comando con parámetros (representado por un objeto con estado) esta suposición totalmente innecesaria podría invalidarse con una pequeña modificación de la aplicación, por ejemplo, al añadir una pila de comandos ya ejecutados para implementar un comando `undo`.
 
 <!-- TOC --><a name="herencia-y-polimorfismo"></a>
 ### Herencia y polimorfismo
@@ -157,7 +157,7 @@ Una de las partes más frustrantes y propensa a errores de la primera práctica 
 
 Con el patrón `Command` hemos buscado poder introducir nuevos comandos sin tener que cambiar el código del controlador. Análogamente, queremos poder añadir nuevos objetos de juego sin tener que modificar el resto del código. La clave para ello es que `Game` no maneje objetos específicos, sino que maneje objetos de una entidad abstracta que vamos a llamar `GameObject`. El resto de objetos del juego heredarán de esta entidad. Como todos los elementos del juego van a ser `GameObject`, compartirán la mayoría de los atributos y métodos, y cada uno de los objetos de juego concretos será el encargado de implementar su propio comportamiento. 
 
-Todos los `GameObject` tienen una posición en el juego y un booleano que indica si el objeto está vivo o no y métodos auxiliares para manipular esa posición o para saber si el objeto está vivo o no. Por último, necesitaremos el siguiente método:
+Todos los `GameObject` tienen al menos un atributo para almacenar su posición en el juego y otro booleano que indica si el objeto está vivo o no, y métodos auxiliares para manipular esa posición o para saber si el objeto está vivo o no. Por último, necesitaremos el siguiente método:
 
 ```public void update()```
 
@@ -168,8 +168,6 @@ Es normal que en objetos sencillos la implementación de este método sea vacía
 
 - La clase abstracta `GameObject` tendrá los atributos y métodos básicos para controlar la posición en el tablero y una referencia a la clase `Game`.
 - De `GameObject` heredarán las clases `Lemming`, `Wall` y `ExitDoor`.
-
-<!--Es importante remarcar que la versión anterior de la práctica se diseñó pensando en la estructura que tendría esta segunda práctica, de modo que la refactorización resultase más sencilla. En particular, la mayor parte de la lógica de juego estaba ya distribuida en los propios elementos del juego, quedando la clase `Game` liberada de esta tarea. -->
 
 <!-- TOC --><a name="contenedor-de-objetos-del-juego"></a>
 ### Contenedor de objetos del juego
