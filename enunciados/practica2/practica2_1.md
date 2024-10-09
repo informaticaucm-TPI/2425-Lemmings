@@ -6,7 +6,6 @@
 		- [Herencia y polimorfismo](#herencia-y-polimorfismo)
 		- [Contenedor de objetos del juego](#contenedor-de-objetos-del-juego)
 		- [Interfaces de `Game`](#interfaces-de-game)
-		- [Interfaces de `GameObject`](#interfaces-de-gameobject)
 	- [Pruebas](#pruebas)
 <!-- TOC end -->
 <!-- TOC --><a name="práctica-2-parte-i-lemmings-refactored"></a>
