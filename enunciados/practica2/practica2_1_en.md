@@ -104,10 +104,10 @@ The following classes are involved in our application of the *command pattern*:
 - `Controller`: the code of the controller class is now reduced to only a few lines since most of the
   functionality that it included in Assignment 1 is now delegated to the concrete command classes.
 
-[^4]: Fragile code is code which makes difficult-to-justify and usually implicit assumptions about its
+[^4]: Fragile code is code which makes implicit assumptions about its
 environment (where this refers to the rest of the program code together with the program environment)
-which can lead to it working incorrectly if its environment does not fulfill these assumptions, either in
-the present or in the future. In the case in point, returning the value `this` is making the implicit assumption
+which can lead to it working incorrectly if its environment changes and no longer fulfills these assumptions.
+In the case in point, returning the value `this` is making the implicit assumption
 that there will only ever be one instance of the corresponding command class in the program at the same time
 (the one that is in the `AVAILABLE_COMMANDS` list). Command objects that represent commands without parameters
 are *stateless* since an instance is simply a pointer to a set of methods so for such objects this assumption
