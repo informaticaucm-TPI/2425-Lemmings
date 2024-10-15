@@ -6,3 +6,4 @@
     - [Plantilla de la Práctica 1](https://github.com/informaticaucm-TPI/2425-Lemmings/releases/tag/practica1_plantilla)
 
 - [Enunciado de la Práctica 2.1](./enunciados/practica2/practica2_1.md) ([English](./enunciados/practica2/practica2_1_en.md))
+- [Enunciado de la Práctica 2.2](./enunciados/practica2/practica2_2.md) ([English](./enunciados/practica2/practica2_2_en.md))

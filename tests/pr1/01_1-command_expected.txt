@@ -132,7 +132,7 @@ Lemmings exit door: 0 ┃2
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
 
-Command > [DEBUG] Executing: r 1
+Command > [DEBUG] Executing: r 134
 
 [ERROR] Error: Incorrect parameter number
 
@@ -158,7 +158,7 @@ Lemmings exit door: 0 ┃2
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
 
-Command > [DEBUG] Executing: r 0
+Command > [DEBUG] Executing: r 230
 
 [ERROR] Error: Incorrect parameter number
 
