@@ -235,7 +235,8 @@ is that the `Game` class
 be generic, i.e. it should not handle specific game objects only objects of an abstract class
 called `GameObject`, from which all the concrete game object classes
 (currently `Lemming`, `Wall` and `ExitDoor`), derive. So *the game code must **not** seek to identify the 
-dynamic type (i.e. which subclass of `GameObject`) of the objects it is handling*. This abstract class should contain
+dynamic type (i.e. which concrete subclass of `GameObject`) of the objects it is handling*.
+This abstract class should contain
 all the attributes and methods that are common to all the concrete game object classes; where appropriate,
 each concrete game object class can overwrite inherited methods to implement its own behaviour. Note that
 
@@ -281,7 +282,7 @@ Java generics will be studied in detail in the TP2 course.
 
 Observe that, like the `Game` class, the `GameObjectContainer` class only deals with objects of the abstract
 class `GameObject` so, like the game code, *the container code must **not** seek to identify the dynamic type
-(i.e. which subclass of `GameObject`) of the objects it is handling*. Finally, it is of great importance that
+(i.e. which concrete subclass of `GameObject`) of the objects it is handling*. Finally, it is of great importance that
 the implementation details of the `GameObjectContainer` be private so, for example, it should not export the
 value of any of the attributes of the `ArrayList` class that it is using to store the game objects.
 This information hiding enables the implementation of the container to be changed without affecting the
