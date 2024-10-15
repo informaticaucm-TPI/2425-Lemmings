@@ -110,11 +110,12 @@ which can lead to it working incorrectly if its environment changes and no longe
 In the case in point, returning the value `this` is making the implicit assumption
 that there will only ever be one instance of the corresponding command class in the program at the same time
 (the one that is in the `AVAILABLE_COMMANDS` list). Command objects that represent commands without parameters
-are *stateless* since an instance is simply a pointer to a set of methods so for such objects this assumption
-is in no way restrictive. However, command objects that represent commands with parameters are *stateful* and
-though this assumption holds for such commands in the current program it may not hold for them in evolutions
+are *stateless* since, in the absence of attributes, an instance is simply a pointer to a set of methods;
+for such objects the above-mentioned assumption is in no way restrictive. However, command objects that
+represent commands with parameters are *stateful* and
+though the above assumption holds for such commands in the current program, it may not hold for them in evolutions
 of the program, e.g. a program where we store a stack of command objects in order to implement an *undo* command,
-so why make it when it is completely unnecessary?
+so why make it given that it is completely unnecessary to do so?
 
 **Main loop of the program**. In the previous assignment, in order to know which command to execute, the main loop of the program
 in the `run` method of the controller contained a switch or if-else ladder with one option for each of
@@ -222,4 +223,67 @@ will be different for every command, for which reason, the `NoParamsCommand` cla
 <!-- TOC --><a name="herencia-y-polimorfismo"></a>
 ### Inheritance and polymorphism
 
-*\<to be continued...\>*
+We have seen that the use of inheritance in the `Command` inheritance hierarchy significantly reduces the
+repetition of code. Moreover, the use of
+inheritance and polymorphism in the *command pattern* greatly facilitates the introduction of new commands,
+the key aspect being that the `Controller` class is generic, i.e. it does not handle specific commands
+but only handles objects of the abstract class `Command`.
+
+Similarly, use of inheritance in an inheritance hierarchy of game objects would also reduce the repetition
+of code and facilitate the introduction of new game objects. The key aspect to obtaining the latter benefit
+is that the `Game` class
+be generic, i.e. it should not handle specific game objects only objects of an abstract class
+called `GameObject`, from which all the concrete game object classes
+(currently `Lemming`, `Wall` and `ExitDoor`), derive. So *the game code must **not** seek to identify the 
+dynamic type (i.e. which subclass of `GameObject`) of the objects it is handling*. This abstract class should contain
+all the attributes and methods that are common to all the concrete game object classes; where appropriate,
+each concrete game object class can overwrite inherited methods to implement its own behaviour. Note that
+
+- whether to define an abstract method in `GameObject`, or a method containing default behaviour, is
+  a design decision,
+  
+- in accord with the DRY principle, attributes and non-abstract methods should always be placed in the
+  highest class possible of the inheritance hierarchy.
+
+All game objects have, at least, an attribute to store the game, an attribute to store their position and a
+boolean attribute to indicate whether they are alive or not. They have, at least, methods to manipulate their
+position and a method to communicate whether they are alive or not. They will also have the method:
+
+```public void update()```
+
+which, in the case of the `Wall` class, has an empty body.
+
+<!-- TOC --><a name="contenedor-de-objetos-del-juego"></a>
+### The game object container
+
+Having refactored the code for the commands and for the game objects, we now turn our attention to the
+management of the game objects. As in the previous assignment, the game objects will be managed by the
+`GameObjectContainer` class. However, instead of using multiple lists, we can take advantage of the
+inheritance hierarchy of game objects to store them all on a single list of objects of type `GameObject`.
+For simplicity, we use an `ArrayList` [^5] of elements of type `GameObject`:
+
+```java
+public class GameObjectContainer {
+
+	private List<GameObject> gameObjects;
+
+	public GameObjectContainer() {
+		gameObjects = new ArrayList<>();
+	}
+    //...
+}
+```
+[^5]: `ArrayList` is a class defined in the Java collections library. The classes of this library
+make use of *parametric polymorphism*, known as *Java generics* in Java, first
+used in functional programming in the mid-70s and introduced in Java in 2004 (with Java 5).
+The polymorphism associated with inheritance is called *inclusion polymorphism* or *subtype polymorphism*.
+Java generics will be studied in detail in the TP2 course.
+
+Observe that, like the `Game` class, the `GameObjectContainer` class only deals with objects of the abstract
+class `GameObject` so, like the game code, *the container code must **not** seek to identify the dynamic type
+(i.e. which subclass of `GameObject`) of the objects it is handling*. Finally, it is of great importance that
+the implementation details of the `GameObjectContainer` be private so, for example, it should not export the
+value of any of the attributes of the `ArrayList` class that it is using to store the game objects.
+This information hiding enables the implementation of the container to be changed without affecting the
+rest of the program code.
+
