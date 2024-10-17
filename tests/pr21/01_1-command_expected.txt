@@ -38,7 +38,7 @@ Available commands:
 
 Command > [DEBUG] Executing: noExiste
 
-[ERROR] Error: noExiste
+[ERROR] Error: Unknown command: noExiste
 
 Command > [DEBUG] Executing: none
 
@@ -128,91 +128,55 @@ Lemmings exit door: 0 ┃2
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
 
-Command > [DEBUG] Executing: r 1
+Command > [DEBUG] Executing: r 134
 
-Number of cycles: 0
-Lemmings in board: 4
-Dead lemmings: 0
-Lemmings exit door: 0 ┃2
-
-      1    2    3    4    5    6    7    8    9   10  
-   ┌——————————————————————————————————————————————————┐
-  A┃                                               B  ┃A
-  B┃                                        ▓▓▓▓▓▓▓▓▓▓┃B
-  C┃                                                  ┃C
-  D┃            B    B                                ┃D
-  E┃          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         ┃E
-  F┃                     🚪            ▓▓▓▓▓          ┃F
-  G┃                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ┃G
-  H┃                                                  ┃H
-  I┃  B                                     ▓▓▓▓▓     ┃I
-  J┃▓▓▓▓▓▓▓▓▓▓                              ▓▓▓▓▓▓▓▓▓▓┃J
-   └——————————————————————————————————————————————————┘
-      1    2    3    4    5    6    7    8    9   10  
+[ERROR] Error: Unknown command: r
 
 Command > [DEBUG] Executing: none
 
-Number of cycles: 1
+Number of cycles: 2
 Lemmings in board: 4
 Dead lemmings: 0
 Lemmings exit door: 0 ┃2
 
       1    2    3    4    5    6    7    8    9   10  
    ┌——————————————————————————————————————————————————┐
-  A┃                                               ᗺ  ┃A
+  A┃                                          ᗺ       ┃A
   B┃                                        ▓▓▓▓▓▓▓▓▓▓┃B
   C┃                                                  ┃C
-  D┃                 B    B                           ┃D
+  D┃                      B    B                      ┃D
   E┃          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         ┃E
   F┃                     🚪            ▓▓▓▓▓          ┃F
   G┃                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ┃G
   H┃                                                  ┃H
-  I┃       B                                ▓▓▓▓▓     ┃I
+  I┃            B                           ▓▓▓▓▓     ┃I
   J┃▓▓▓▓▓▓▓▓▓▓                              ▓▓▓▓▓▓▓▓▓▓┃J
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
 
-Command > [DEBUG] Executing: r 0
+Command > [DEBUG] Executing: r 230
 
-Number of cycles: 0
-Lemmings in board: 3
-Dead lemmings: 0
-Lemmings exit door: 0 ┃2
-
-      1    2    3    4    5    6    7    8    9   10  
-   ┌——————————————————————————————————————————————————┐
-  A┃                                               B  ┃A
-  B┃                                        ▓▓▓▓▓▓▓▓▓▓┃B
-  C┃                                                  ┃C
-  D┃            B                                     ┃D
-  E┃          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         ┃E
-  F┃                     🚪            ▓▓▓▓▓          ┃F
-  G┃                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ┃G
-  H┃                                                  ┃H
-  I┃  B                                     ▓▓▓▓▓     ┃I
-  J┃▓▓▓▓▓▓▓▓▓▓                              ▓▓▓▓▓▓▓▓▓▓┃J
-   └——————————————————————————————————————————————————┘
-      1    2    3    4    5    6    7    8    9   10  
+[ERROR] Error: Unknown command: r
 
 Command > [DEBUG] Executing: 
 
-Number of cycles: 1
-Lemmings in board: 3
+Number of cycles: 3
+Lemmings in board: 4
 Dead lemmings: 0
 Lemmings exit door: 0 ┃2
 
       1    2    3    4    5    6    7    8    9   10  
    ┌——————————————————————————————————————————————————┐
-  A┃                                               ᗺ  ┃A
+  A┃                                     ᗺ            ┃A
   B┃                                        ▓▓▓▓▓▓▓▓▓▓┃B
   C┃                                                  ┃C
-  D┃                 B                                ┃D
-  E┃          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         ┃E
+  D┃                           B                      ┃D
+  E┃          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  B                      ┃E
   F┃                     🚪            ▓▓▓▓▓          ┃F
   G┃                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ┃G
   H┃                                                  ┃H
-  I┃       B                                ▓▓▓▓▓     ┃I
-  J┃▓▓▓▓▓▓▓▓▓▓                              ▓▓▓▓▓▓▓▓▓▓┃J
+  I┃                                        ▓▓▓▓▓     ┃I
+  J┃▓▓▓▓▓▓▓▓▓▓  B                           ▓▓▓▓▓▓▓▓▓▓┃J
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  
 
@@ -226,22 +190,22 @@ Available commands:
 
 Command > [DEBUG] Executing: n
 
-Number of cycles: 2
+Number of cycles: 4
 Lemmings in board: 3
-Dead lemmings: 0
+Dead lemmings: 1
 Lemmings exit door: 0 ┃2
 
       1    2    3    4    5    6    7    8    9   10  
    ┌——————————————————————————————————————————————————┐
-  A┃                                          ᗺ       ┃A
-  B┃                                        ▓▓▓▓▓▓▓▓▓▓┃B
+  A┃                                                  ┃A
+  B┃                                     ᗺ  ▓▓▓▓▓▓▓▓▓▓┃B
   C┃                                                  ┃C
-  D┃                      B                           ┃D
-  E┃          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         ┃E
-  F┃                     🚪            ▓▓▓▓▓          ┃F
+  D┃                                                  ┃D
+  E┃          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  B                      ┃E
+  F┃                     🚪    B       ▓▓▓▓▓          ┃F
   G┃                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ┃G
   H┃                                                  ┃H
-  I┃            B                           ▓▓▓▓▓     ┃I
+  I┃                                        ▓▓▓▓▓     ┃I
   J┃▓▓▓▓▓▓▓▓▓▓                              ▓▓▓▓▓▓▓▓▓▓┃J
    └——————————————————————————————————————————————————┘
       1    2    3    4    5    6    7    8    9   10  

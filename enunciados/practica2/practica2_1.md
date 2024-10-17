@@ -71,7 +71,7 @@ while (!game.isFinished()) {
     if (command != null) 
 		command.execute(game, view);
     else 
-        view.showError(Messages.UNKNOWN_COMMAND);
+        view.showError(Messages.UNKNOWN_COMMAND.formatted(words[0]));
 }   
 ```
 
