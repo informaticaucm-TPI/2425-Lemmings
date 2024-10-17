@@ -32,7 +32,7 @@ public class Messages {
 	public static final String GAME_OVER = "Game over";
 	public static final String PLAYER_QUITS = "Player leaves the game";
 	public static final String PLAYER_WINS = "Player wins!";
-	public static final String PLAYER_LOOSES = "Player lose...";
+	public static final String PLAYER_LOOSES = "Player loses...";
 
 	// Position format
 	public static final String POSITION = "(%s,%s)";

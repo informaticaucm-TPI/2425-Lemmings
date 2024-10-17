@@ -1,0 +1,16 @@
+h
+help
+noExiste
+none
+r
+reset
+none
+r 1
+none
+r 0
+
+help
+n
+e
+exit
+

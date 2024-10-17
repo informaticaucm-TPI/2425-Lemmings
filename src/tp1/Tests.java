@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 import org.junit.jupiter.api.Test;
 
 public class Tests {
+	public static final String DIR = "tests/pr21/";
 
 	private static boolean compareOutput(Path expectedPath, Path actualPath) throws FileNotFoundException, IOException {
 		boolean same = true;
@@ -69,23 +70,23 @@ public class Tests {
 
 	@Test
 	public void test00() {
-		parameterizedTest(Paths.get("tests/pr1/00_1-play_input.txt"), Paths.get("tests/pr1/00_1-play_expected.txt"),
-				Paths.get("tests/pr1/00_1-play_output.txt"),
+		parameterizedTest(Paths.get(DIR + "00_1-play_input.txt"), Paths.get(DIR + "00_1-play_expected.txt"),
+				Paths.get(DIR + "00_1-play_output.txt"),
 				new String[] { "0", "NO_COLORS" });
 	}
 
 
 	@Test
 	public void test01() {
-		parameterizedTest(Paths.get("tests/pr1/01_1-command_input.txt"), Paths.get("tests/pr1/01_1-command_expected.txt"),
-				Paths.get("tests/pr1/01_1-command_output.txt"),
+		parameterizedTest(Paths.get(DIR + "01_1-command_input.txt"), Paths.get(DIR + "01_1-command_expected.txt"),
+				Paths.get(DIR + "01_1-command_output.txt"),
 				new String[] { "1", "NO_COLORS" });
 	}
 
 	@Test
 	public void test02() {
-		parameterizedTest(Paths.get("tests/pr1/01_2-play_input.txt"), Paths.get("tests/pr1/01_2-play_expected.txt"),
-				Paths.get("tests/pr1/01_2-play_output.txt"),
+		parameterizedTest(Paths.get(DIR + "01_2-play_input.txt"), Paths.get(DIR + "01_2-play_expected.txt"),
+				Paths.get(DIR + "01_2-play_output.txt"),
 				new String[] { "1", "NO_COLORS" });
 	}
 	
