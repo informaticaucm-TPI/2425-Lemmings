@@ -173,13 +173,13 @@ Una vez realizados todos los pasos anteriores, vamos a añadir un nuevo comando 
 Nótese que hemos cambiado el método propuesto en el apartado **Paracaidista**, devolviendo un *booleano* en vez de `void`. El booleano indicará si ha tenido éxito o no al aplicar el rol al objeto. Solo los objetos del tipo lemming, **que no tengan ya ese rol**, realizarán la tarea de cambiar el rol, el resto indicará que no tiene éxito. De esta forma será muy sencillo programar `SetRoleCommand`. Si no existe ningún objeto al que se pueda aplicar dicho rol o la posición es incorrecta el programa deberá mostrar el mensaje siguiente:
 
 ````
-ERROR: SetRoleCommand error (Incorrect position or no object in that position admits that role)
+[ERROR] Error: SetRoleCommand error (Incorrect position or no object in that position admits that role)
 ````
 
 Sin embargo, si el rol no existe el programa deberá mostrar el siguiente error:
 
 ```
-ERROR: Unknown Role
+[ERROR] Error: Unknown Role
 ```
 
 Para implementar el método `helpText()` de este comando es posible que necesites pedir a la factoría de roles su ayuda, por lo que si no la has implementado anteriormente deberías crear un método en ésta para que te devuelva su ayuda. Fíjate en el [ejemplo](#command-setRoleCommand-example) que hay al principio de este documento, pues seguro que te hace falta añadir algún mensaje en la clase `Messages`.
