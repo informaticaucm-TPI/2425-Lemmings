@@ -378,7 +378,8 @@ Command > h
 
 Available commands:
    [s]et[R]ole ROLE ROW COL: sets the lemming in position (ROW,COL) to role ROLE
-      [P]arachuter: Lemming falls with a parachute
+      [D]own[C]aver: Lemming caves downwards
+	  [P]arachuter: Lemming falls with a parachute
       [W]alker: Lemming that walks
    [n]one | "": user does not perform any action
    [r]eset [numLevel]: reset the game to initial configuration if not numLevel else load the numLevel map
@@ -389,7 +390,7 @@ Available commands:
 Se mantiene la funcionalidad antigua para el `reset` sin argumento y para el `reset` con número de nivel se cargará el mapa con dicho nivel. En caso de que no existiera dicho nivel solo se debería mostrar por pantalla el siguiente error:
 
 ```
-[ERROR] Error: No such level
+[ERROR] Error: Not valid level number
 ```
 
 
