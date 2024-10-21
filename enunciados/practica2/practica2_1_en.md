@@ -352,7 +352,7 @@ public abstract void execute(GameModel game, GameView view);
 
 Recall that after refactoring, the program should have exactly the same functionality as the versión previous to the refactoring and should therefore pass the same system tests, even though the implementation now contains many more classes.
 
-To simplify the tests, we are going to "abuse" the Eclipse [JUnit](https://junit.org/) support, in order to facilitate the comparison of the output of our program with the expected output. JUnit is a testing framework [^6] for automating testing of Java code, which you will undoubtedly come across in other courses of your degree (or one of the many derived frameworks).
+To simplify the tests, we are going to "abuse" the Eclipse [JUnit](https://junit.org/) support, in order to facilitate the comparison of the output of our program with the expected output. JUnit is a testing framework [^6] for automating the testing of Java code, which you will undoubtedly come across in other courses of your degree (or one of the many derived frameworks).
 
 [^6]: Originally, a unit-testing framework, hence the name. The first version, written in 1997 was based on SUnit, a unit-testing framework for Smalltalk, which preceeded it by almost a decade.
 
