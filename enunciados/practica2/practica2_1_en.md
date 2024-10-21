@@ -115,7 +115,7 @@ for such objects the above-mentioned assumption is in no way restrictive. Howeve
 represent commands with parameters are *stateful* and
 though the above assumption holds for such commands in the current program, it may not hold for them in evolutions
 of the program, e.g. a program where we store a stack of command objects in order to implement an *undo* command,
-so why make it given that it is completely unnecessary to do so?
+so why make it, given that it is completely unnecessary to do so?
 
 **Main loop of the program**. In the previous assignment, in order to know which command to execute, the main loop of the program
 in the `run` method of the controller contained a switch or if-else ladder with one option for each of
@@ -288,3 +288,100 @@ value of any of the attributes of the `ArrayList` class that it is using to stor
 This information hiding enables the implementation of the container to be changed without affecting the
 rest of the program code.
 
+<!-- TOC --><a name="interfaces-de-game"></a>
+### Interfaces implemented by the `Game` class
+
+The `Game` class offers services to different parts of the program, namely:
+
+- *Controller*: invokes those methods of the game, such as `update` or `reset`, that implement the commands entered by the user; after the above-described refactoring, the calls to these methods are made from the body of the `execute` methods of the `Command` classes. It also invokes methods that return information about the state of the game, such as `isFinished`.
+
+- *View*: invokes methods that return information about the state of the game, such as `getCycle`, `numLemmingsInBoard` or `positionToString`, that is needed to display the current state.
+
+- *Model*: the game objects (part of the model, as is the `Game` class itself) invoke those methods of the game, such as `isInAir` or `lemmingArrived`, that concern interactions between game objects. Since these calls *to* the game result from calls *by* the game via the container, usually as part of an update, they are referred to as *callbacks*.
+
+Notice that with the current implementation, nothing prevents the *model* invoking a method of `Game` that was designed for the *controller* to invoke, e.g. a game object invoking the `reset` method, or the *view* invoking a method of `Game` designed for the *model* to invoke, e.g. the game view invoking the `lemmingArrived` method, etc. In order for the compiler to detect such inconsistent invocations we can use interfaces to define *partial views* on the services offered by the `Game` class. To that end, we define the following three interfaces:
+
+- `GameModel` to represent the *controller*'s view of the services offered by the `Game` class,
+
+- `GameStatus` to represent the *view*'s view of the services offered by the `Game` class,
+
+- `GameWorld` to represent the *model*'s view of the services offered by the `Game` class.
+
+For example:
+
+
+```java
+public interface GameModel {
+
+	public boolean isFinished();
+	public void update();
+	public void reset();
+	// ...
+}
+```
+
+The `Game` class must then implement these interfaces:
+
+```java
+public class Game implements GameModel, GameStatus, GameWorld {
+
+	// ... 
+	private GameObjectContainer container;
+	private int nLevel;
+	// ...
+	
+	// Methods declared in GameModel
+	// ...
+	// Methods declared in GameWorld
+	// ...
+	// Methods declared in GameStatus
+	// ...
+	// Other methods
+	// ...
+}
+```
+
+Finally, in each part of the three parts of the program, we must replace each occurrence of the type `Game` by the corresponding interface type. For example, the execute method of the `Command` class now has the following form:
+
+```java
+public abstract void execute(GameModel game, GameView view);
+```
+
+<!-- TOC --><a name="pruebas"></a>
+## Testing
+
+Recall that after refactoring, the program should have exactly the same functionality as the versión previous to the refactoring and should therefore pass the same system tests, even though the implementation now contains many more classes.
+
+To simplify the tests, we are going to "abuse" the Eclipse [JUnit](https://junit.org/) support, in order to facilitate the comparison of the output of our program with the expected output. JUnit is a testing framework [^6] for automating testing of Java code, which you will undoubtedly come across in other courses of your degree (or one of the many derived frameworks).
+
+[^6]: Originally, a unit-testing framework, hence the name. The first version, written in 1997 was based on SUnit, a unit-testing framework for Smalltalk, which preceeded it by almost a decade.
+
+The template that we provide you with includes a class called `tp1.Tests` containing the JUnit tests, concretely, one test case for each of those of Assignment 1. In order to execute these test cases, you must first add the JUnit library to the project. To do so, select *Project > Properties*, then *Java Build Path*, then the *Libraries* tab. Then, with *Classpath* selected (not *ModulePath*), click on *Add Library...*.
+
+![](./imgs/00-ProjectProjerties.jpg)
+
+In the pop-up window select *JUnit* then click on the *Finish* button.
+
+![](./imgs/01-AddJUnit.jpg)
+
+On returing to the project properties window, click on the *Apply and Close* button.
+
+If the configuration has been done correctly, on clicking with the right mouse button on `Tests.java`, the *Run As* menu should include the option *JUnit Test*.
+
+![](./imgs/02-RunAsJUnitTest.jpg)
+
+On executing the tests in Eclipse, the the results are displayed in a view that also enables the tests to be rerun, either individually or all at once. Note that the JUnit test verdict is a simple yes or no according to whether or not the program output is identical to the expected output. In the case where it is not, to see the differences between them, the two files will need to be compared in the same way as in Assignment 1.
+
+<!-- ![Fallo JUnit](./imgs/03-JUnitFailed.jpg) -->
+<figure>
+    <img src="./imgs/03-JUnitFailed.jpg"
+         alt="Fallo JUnit">
+    <figcaption>Fallan las pruebas JUnit</figcaption>
+</figure>
+
+<!-- ![Todas las pruebas JUnit tienen éxito](./imgs/04-JUnitPass.jpg) -->
+<figure>
+    <img src="./imgs/04-JUnitPass.jpg"
+         alt="Éxito JUnit">
+    <figcaption>Todas las pruebas JUnit tienen éxito</figcaption>
+</figure>
