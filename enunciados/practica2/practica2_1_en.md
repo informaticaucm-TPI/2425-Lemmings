@@ -1,12 +1,12 @@
 <!-- TOC start -->
 - [Práctica 2 - Parte I: Lemmings Refactored](#práctica-2---parte-i-lemmings-refactored)
 	- [Introduction](#introducción)
-	- [Refactorizing the solution of the previous assignment](#refactorización-de-la-solución-de-la-práctica-anterior)
+	- [Refactoring the solution of the previous assignment](#refactorización-de-la-solución-de-la-práctica-anterior)
 		- [The *Command* pattern](#patrón-command)
 		- [Inheritance and polymorphism](#herencia-y-polimorfismo)
 		- [The Game object container](#contenedor-de-objetos-del-juego)
 		- [Interfaces implemented by the `Game` class](#interfaces-de-game)
-	- [Pruebas](#pruebas)
+	- [Testing](#pruebas)
 <!-- TOC end -->
 <!-- TOC --><a name="práctica-2-parte-i-lemmings-refactored"></a>
 # Assignment 2 - Part I: Lemmings Refactored
