@@ -29,12 +29,15 @@ different possible behaviours and interactions with their environment, encapsula
 
 - breaking encapsulation,
 - the use of methods that return lists,
-- the use of `instanceof` or `getClass`, since identifying the dynamic types of objects is simply a way of avoiding the use of polymorphism and dynamic binding, i.e. avoiding the use of OOP.
-- the use of a *DIY instanceof* (e.g. each subclass of `GameObject` has a set of methods `isX`, one for each subclass of `GameObject`, where in class `Y`, the method `isX` returns `true` in the class `X` and `false` in any other class). This solution is
-even worse than using `instanceof` or `getClass` since it is simply a clumsier, more verbose, way of doing the same thing.
+- the use of `instanceof` or `getClass`, since identifying the dynamic types of objects is simply a way of avoiding the use of
+  polymorphism and dynamic binding, i.e. of avoiding the use of OOP.
+- the use of a *DIY instanceof* (e.g. each subclass of `GameObject` has a set of methods `isX`, one for each concrete subclass of
+  `GameObject`, where the method `isX` returns `true` in the concrete `GameObject` subclass `X` and `false` in any other concrete
+   `GameObject` subclass); such a solution is even worse than using `instanceof` or `getClass` since it is simply a clumsier, more
+   verbose, way of doing the same thing.
 
 <!-- TOC --><a name="command-setRoleCommand_parachuter"></a>
-## New command and new role: SetRoleCommand y Parachuter
+## New command and new role: `SetRoleCommand` and `Parachuter`
 
 In this section we create a new command that enables the role of a lemming to be changed. However, in order to be
 able to use this command, the game must have more than one role so we also need to create a new role. We begin by
@@ -107,9 +110,9 @@ Command >
 We propose the following division into tasks.
 
 <!-- TOC --><a name="interfaz-lemmingRole"></a>
-### : Interface implemented by the roles: `LemmingRole`
+### Interface implemented by the roles: `LemmingRole`
 
-First we create an interface that the different role classes, including, of course, the `WalkerRole` class, must implement: 
+First we create an interface to be implemented by the different role classes, including, of course, WalkerRole`: 
 
 ```java
 public interface LemmingRole {
@@ -121,10 +124,9 @@ public interface LemmingRole {
 }
 ```
 
-For the moment, a role consists of the implementation of the two methods `play` and `getIcon` and an empty implementation
-of the method `start`. The latter method will contain a non-empty body if there is any action to be taken on assigning the
-role to a lemming. To enable lemmings to change role at execution time, we use the interface as the type of the attribute
-`role` of the lemming class:
+For the moment, a role consists of the implementation of the two methods `play` and `getIcon`. The latter method will contain
+a non-empty body if there is any action to be taken on assigning the role to a lemming. To enable lemmings to change role at
+execution time, we use the interface as the type of the attribute `role` of the lemming class:
 
 ```java
 	private LemmingRole role;
@@ -134,7 +136,7 @@ In this way, we can use polymorphism to assign to the `role` attribute any objec
 such as `WalkerRole`, `ParachuterRole` or others.
 
 <!-- TOC --><a name="parachuter"></a>
-### New role class: `ParachuterRole`)
+### New role class: `ParachuterRole`
 
 This new role can be applied to any lemming on the board by using the `SetRoleCommand`. If applied to a lemming that is
 falling, the force with which it is falling is reduced to 0. A falling lemming with the parachuter role maintains that
@@ -218,10 +220,10 @@ If the role doesn't exist, on the other hand, the following error message should
 [ERROR] Error: Unknown Role
 ```
 
-The `helpText()` method of this command should call a method that returns a message associated to the role name
-passed as a parameter (called, for example, `getInfo`) so you must implement such a method if you have not already done so.
-Observe the use of the help command in the [execution trace](#command-setRoleCommand-example) at the beginning of
-this document. You may add new messages to the `Messages` class.
+The `helpText()` method of this command should call a method similar to the `commandHelp` method of the `CommandGenerator`
+in order to obtain the text associated to each role, so you must implement such a method if you have not already done so.
+The required output can be seen in the use of the help command in the [execution trace](#command-setRoleCommand-example) at
+the beginning of this document. You may add new messages to the `Messages` class if you wish.
 
 <!-- TOC --><a name="factoría-de-roles"></a>
 <!-- Versión detallada de la factoría de roles
