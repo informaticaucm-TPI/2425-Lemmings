@@ -11,15 +11,10 @@ public class Lemming extends GameObject {
 	
 	public Lemming(Game game, Position pos) {
 		super(game, pos);
-		this.role = WalkerRole();
+		this.role = new WalkerRole();
 		// TODO fill your code
 	}
 	
-	private WalkerRole WalkerRole() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	// Not mandatory but recommended
 	public void walkOrFall() {
 		// TODO Auto-generated method stub

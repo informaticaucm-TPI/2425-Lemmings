@@ -1,0 +1,16 @@
+setRole p a 7
+setRole P B 7
+setRole w C 7
+setRole Dc D 4
+setRole DC E 4
+setRole waLker C 7
+setRole W C 7
+noNe
+nOne
+n
+N
+
+None
+NOne
+noNE
+exit

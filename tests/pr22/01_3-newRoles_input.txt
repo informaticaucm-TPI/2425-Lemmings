@@ -1,0 +1,25 @@
+setRole Parachuter A 10
+setRole Parachuter A 10
+none
+setRole Parachuter A 8
+setRole Walker B 8
+none
+
+n
+setRole DownCaver F 6
+none
+n
+reset
+none
+n
+setRole DownCaver D 5
+
+none
+n
+setRole Parachuter D 8
+noNe
+none
+n
+
+nonE
+exit

@@ -10,6 +10,7 @@
 	- [Detalles: DownCaverRole y MetalWall](#detalles-downCaver-metalWall)
 	- [Aplicando *double-dispatch* al ExitDoor (opcional)](#dd-exitDoor)
 	- [Extendiendo el commando reset (opcional)](#reset-num)
+- [Nuevo mundo: mapa 2](#mapa2)
 <!-- TOC end -->
 <!-- TOC --><a name="práctica-2-parte-ii-lemmings-extended"></a>
 # Práctica 2 - Parte II: Lemmings Extended
@@ -393,8 +394,34 @@ Se mantiene la funcionalidad antigua para el `reset` sin argumento y para el `re
 [ERROR] Error: Not valid level number
 ```
 
+<!-- TOC --><a name="mapa2"></a>
+# Nuevo mundo: mapa 2
 
+Se ha añadido en las pruebas el **mapa 2**, con pequeños añadidos con respecto a los anteriores. Este mapa se podrá al igual que los anteriores cargar desde los argumentos del juego y debería cargarse a través de la función `initGame2()`. El mapa es el siguiente:
 
+```
+Number of cycles: 0
+Lemmings in board: 6
+Dead lemmings: 0
+Lemmings exit door: 0 ┃2
+
+      1    2    3    4    5    6    7    8    9   10  
+   ┌——————————————————————————————————————————————————┐
+  A┃                               B🪂             B  ┃A
+  B┃                                        ▓▓▓▓▓▓▓▓▓▓┃B
+  C┃                                                  ┃C
+  D┃            B    B                                ┃D
+  E┃          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         ┃E
+  F┃               ▓▓▓▓▓ 🚪            ▓▓▓▓▓          ┃F
+  G┃               XXXXX▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ┃G
+  H┃                                                  ┃H
+  I┃  B                                     ▓▓▓▓▓     ┃I
+  J┃▓▓▓▓▓▓▓▓▓▓                              ▓▓▓▓▓▓▓▓▓▓┃J
+   └——————————————————————————————————————————————————┘
+      1    2    3    4    5    6    7    8    9   10  
+```
+
+El símbolo `XXXXX` representa una pared de metal.
 
 <!--- <span style="color:orange">**AE**: ToDo: por cambiar a partir de aquí.</span>
 --->

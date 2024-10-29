@@ -69,8 +69,8 @@ public class ConsoleView extends GameView {
 	public static String getRowName(int num) {
 		return Character.toString('A' + num % 27);
 	}
-	public static String rowNameToNum(String name) {
-		return Integer.toString(name.charAt(0) - 'A');
+	public static int rowNameToNum(String name) {
+		return name.charAt(0) - 'A';
 	}
 
 	@Override
