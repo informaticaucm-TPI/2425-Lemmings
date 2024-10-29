@@ -11,6 +11,12 @@ r 230
 
 heLP
 n
+rEset 2
+noNE
+reSet 1
+noNe
+resEt 0
+NoNe
 e
 exit
 
