@@ -197,9 +197,9 @@ To create the factory correctly, you will need to add one or more methods to the
 
 We now add a new command that enables a lemming's role to be changed at execution time. This command has three arguments: the
 role to be applied and the two coordinates of the lemming's position on the board. Since there may be more than one lemming at a
-given position (e.g. moving in opposite directions), for simplicity, you may apply the role to the first lemming found in that
-position by the container (so what this command does in such cases is implementation-dependent). Recall, however, that the
-container does not know which game objects are lemmings, for which reason, we add the method
+given position (e.g. two lemmings moving in opposite directions), for simplicity, you may apply the role to the first lemming 
+found in that position by the container (so what this command does in such cases is implementation-dependent). Recall, however,
+that the container does not know which game objects are lemmings, for which reason, we add the method
 
 ```java
 	public boolean setRole(LemmingRole role);
