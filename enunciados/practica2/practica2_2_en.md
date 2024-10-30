@@ -7,7 +7,7 @@
 	- [New command class: `SetRoleCommand`](#command-setRoleCommand)
 - [New role and new object: DownCaverRole and MetalWall](#downCaver-metalWall)
 	- [Generalizing the **interactions** between game objects](#interfaces-de-gameobject)
-	- [Details of DownCaverRole and MetalWall](#detalles-downCaver-metalWall)
+	- [Details of `DownCaverRole` and `MetalWall`](#detalles-downCaver-metalWall)
 	- [Applying *double-dispatch* to the ExitDoor](#dd-exitDoor)
 	- [Extending the reset command (optional)](#reset-num)
 <!-- TOC end -->
@@ -112,7 +112,7 @@ We propose the following division into tasks.
 <!-- TOC --><a name="interfaz-lemmingRole"></a>
 ### Interface implemented by the roles: `LemmingRole`
 
-First we create an interface to be implemented by the different role classes, including, of course, WalkerRole`: 
+First we create an interface to be implemented by the different role classes, including, of course,  WalkerRole`: 
 
 ```java
 public interface LemmingRole {
@@ -289,3 +289,85 @@ Observa que para crear los roles en la lista `AVAILABLE_LEMMINGS_ROLES` necesita
 
 <!-- TOC --><a name="downCaver-metalWall"></a>
 ## New role and new game object: `DownCaverRole` and `MetalWall`
+
+We now extend the program further and in so doing, demonstrate that the program structure we have created facilitates such extension.
+We add a caver role which causes a lemming to dig, that is, to eliminate the solid object in the cell immediately below it and
+then occupy the position formerly occupied by this solid object. As for the parachuter role, if the lemming cannot dig, the caver role has no effect. The failed attempt to change the lemming's role does not consume a cycle so the lemming will then move.
+
+For the behaviour associated to this new role to depend on the lemmings interaction with its environment, we introduce a new type of
+game object: a metal wall that the caver cannot penetrate. To implement this, we could add a new property to game objects, that 
+of being *hard* or *soft* but this would oblige us to modify various classes. Moreover, following this logic would oblige us to
+add new methods and/or attributes with each extension, which could be viewed as using a *DIY instanceof*. Instead,
+we generalise the *interactions* betwen the game objects.
+
+<!-- TOC --><a name="interfaces-de-gameobject"></a>
+### Generalising the interactions between game objects
+
+In Assignment 1, we already had cases of a lemming interacting with its environment, for example, a lemming interacting with the
+exit door in order to know whether to successfully leave the game. However, this was implemented in an ad-hoc manner by
+simply using a method `isExit` of the game which called the container which checked if the exit was indeed in this position.
+The interaction between a caver lemming and the object below it is another example; in this case, if the floor is hard,
+the role has no effect but if the floor is soft, the caver will dig it out.
+
+To model these interactions between objects, we will use the interface `GameItem` and a technique known as ***double-dispatch***,
+in which the run-time selection of the method body to be executed (this being known as *dispatch*) depends on the dynamic class
+of *both* of the objects involved in the interaction. This is implemented by having the dispatch depend not only on the dynamic
+type of the object on which the method call was made, the usual dynamic-binding case, but also on the dynamic type of the object
+that constitutes the method argument (or, more generally, on that of one of the method arguments, for double-dispatch, or on that
+of several of the method arguments, for multi-dispatch).
+In fact, neither multiple dispatch, nor double dispatch is implemented in Java but there are ways to simulate it. For simplicity,
+we choose one that, strictly speaking, is not even double dispatch since the dispatch depends on the dynamic type of one of the
+participants in the interaction and the static type of the other. This leads to undesireable repetition of code.
+
+The `GameObject` class implements the `GameItem` interface in order for all game objects to have the possibility of
+interacting with the other game objects via the methods of this interface (and *only* via the methods of this interface).
+
+```java
+public interface GameItem {
+	public boolean receiveInteraction(GameItem other);
+
+	public boolean interactWith(Lemming lemming);
+	public boolean interactWith(Wall wall);
+	public boolean interactWith(ExitDoor door);
+
+	public boolean isSolid();
+	public boolean isAlive();
+	public boolean isExit();
+	public boolean isInPosition(Position pos);
+}
+```
+
+Note the overloading of the methods `interactWith`. Note also that the interaction is not implemented symmetrically, as indicated
+by the use of the word "receive" in the name of the main method `receiveInteraction`, indicating that each interaction is
+initiated by one of the objects involved. A valid implementation of this method is as follows:
+
+```java
+	  public boolean receiveInteraction(GameItem other) {
+			return other.interactWith(this);
+	  }
+```
+
+Each concrete subclass of `GameObject` must have an implementation of the `receiveInteraction` method but it cannot obtain it
+by inheritance and dynamic binding, i.e. by simply using the above method code as that of a `default` method in the
+`GameItem` interface (or by simply placing this code in the `GameObject` class). This is because, though a call to a
+method of the object referenced by `this` in a `default` method body (e.g. `this.toString()`) will use normal dynamic binding and
+will work correctly (i.e. will use the method body of the dynamic type of the object implementing the interface), the same is not
+true in the `GameItem` interface because method overloading is resolved at compile time, meaning that the static type of the
+object referenced by `this` will be used. In consequence, in this *"false" double dispatch*, the code for the `receiveInteraction`
+method has to be copied into each of the concrete subclasses of `GameObject`. 
+
+We then extend this way of coding the interaction between game objects to the container by adding a method in the
+`GameObjectContainer` class that carries out all the interactions of a given object (provided as argument) with the other objects
+that it manages:
+
+```java
+	  public boolean receiveInteractionsFrom(GameItem obj) {...}
+```
+
+The boolean return value serves to indicate whether any object has been modified by this interaction. Finally, in order for other
+game objects to be able to generate interactions with their environment, a method calling this container method should be added
+to the `Game` class and declared in the `GameWorld` interface. In particular, we will use it to implement the behaviour
+of the `DownCaverRole` class.
+
+<!-- TOC --><a name="detalles-downCaver-metalWall"></a>
+###  Details of `DownCaverRole` and `MetalWall`
