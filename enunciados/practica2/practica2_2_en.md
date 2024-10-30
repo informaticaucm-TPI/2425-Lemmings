@@ -112,7 +112,7 @@ We propose the following division into tasks.
 <!-- TOC --><a name="interfaz-lemmingRole"></a>
 ### Interface implemented by the roles: `LemmingRole`
 
-First we create an interface to be implemented by the different role classes, including, of course,  WalkerRole`: 
+First we create an interface to be implemented by the different role classes, including, of course, `WalkerRole`: 
 
 ```java
 public interface LemmingRole {
