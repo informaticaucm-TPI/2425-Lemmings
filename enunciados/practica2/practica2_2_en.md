@@ -164,7 +164,7 @@ to enable an execution-time role change and one to disable such a role change an
 
 Due to the polymorphic context, we will later need to modify these methods slightly, see below.
 
-In absence of a `SetRoleCommand`, we can test the different aspects of our ParachuterRole class by creating falling
+In absence of a `SetRoleCommand`, we can test the different aspects of our `ParachuterRole` class by creating falling
 and non-falling lemming with parachutes in the initial configuration.
 
 
