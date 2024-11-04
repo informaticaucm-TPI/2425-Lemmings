@@ -1,228 +1,580 @@
+<!-- TOC start -->
+- [Práctica 3: Excepciones y ficheros](#practica-3-excepcionesYficheros)
+- [Introducción](#introduccion)
+- [Manejo de excepciones](#exceptions)
+	- [Excepciones en los comandos y controlador](#command-exceptions)
+	- [Excepciones en `GameModel`](#gamemodel-exceptions)
+- [Carga de la *configuración de juego* de un fichero](#carga-config)
+	- [Formato del fichero de carga](#formato-fichero)
+	- [Factoría de objetos del juego](#factoria-objetos)
+	- [*Configuración del juego*: GameConfiguration](#configuracion-juego)
+	- [Clase encargada de leer la configuración del fichero: FileGameConfiguration](#configuraciones-iniciales)
+	- [Modificación de la clase Game](#game-load)
+	- [Comando de carga: LoadCommand](#load-command)
+	- [Errores durante la carga del fichero](#file-exceptions)
+	- [Ajustando el método `reset` de Game](#reset-load-game)
+	- [Guardado en el fichero del juego actual (opcional)](#save-command)
+	- [Sacando las configuraciones iniciales de la clase Game (opcional)](#level-conf)
+<!-- TOC end -->
+<!-- TOC --><a name="practica-3-excepcionesYficheros"></a>
 # Práctica 3: Excepciones y ficheros
 
-**Entrega: Semana del 12 de diciembre**
+**Entrega: semana del 2 de diciembre**
 
-**Objetivo:** Manejo de excepciones y tratamiento de ficheros
+**Objetivos:** Manejo de excepciones y tratamiento de ficheros
 
-**Preguntas Frecuentes**: Como es habitual que tengáis dudas (es normal) las iremos recopilando en este [documento de preguntas frecuentes](../faq.md). Para saber los últimos cambios que se han introducido [puedes consultar la historia del documento](https://github.com/informaticaucm-TPI/202223-PlantsVsZombies-SOLUCION/commits/main/enunciados/faq.md).
+**Preguntas Frecuentes**: Como es habitual que tengáis dudas (es normal) las iremos recopilando en este [documento de preguntas frecuentes](../faq.md). Para saber los últimos cambios que se han introducido [puedes consultar la historia del documento](https://github.com/informaticaucm-TPI/2425-Lemmings/commits/main/enunciados/faq.md).
 
+<!-- TOC --><a name="introduccion"></a>
 # Introducción
 
-En esta práctica se ampliará la funcionalidad del juego en dos aspectos principales:
+En esta práctica se ampliará la funcionalidad del juego en dos aspectos:
 
-- Incluir la definición y el tratamiento de excepciones. Durante la ejecución del juego pueden presentarse estados excepcionales que deben ser tratados de forma particular. Además, cada uno de estos estados debe proporcionar al usuario información relevante de por qué se ha llegado a ellos (por ejemplo, errores producidos al procesar un determinado comando). El objetivo último es dotar al programa de mayor robustez, así como de mejorar la interoperabilidad con el usuario.
+- Incluiremos la definición y el tratamiento de excepciones. Durante la ejecución del juego pueden presentarse estados excepcionales que deben ser tratados de forma particular. Por ahora, muchos de estos estados excepcionales los hemos tratados con la devolución del valor `null` pero seguro que ya has sufrido muchos errores del tipo `NullPointerException` y entiendes el motivo por el que no es adecuado el manejo de objetos nulos en Java. Además, al lanzar las excepciones allí donde se producen, los mensajes de error pueden ser más descriptivos y proporcionar al usuario información relevante de por qué se ha llegado a ellos (por ejemplo, errores producidos al procesar un determinado comando). El objetivo último es dotar al programa de mayor robustez, así como mejorar la interoperabilidad con el usuario.
 
-- Gestionar una puntuación asociada a la partida (los puntos se consiguen al matar zombies) y records de puntuación para cada nivel del juego que deben perdurar entre partidas. 
-
-- Gestionar fichero para poder grabar y cargar, si fuera el caso, los records de partidas anteriores para cada nivel del juego.
+- Cargaremos de ficheros las configuraciones iniciales del tablero. De esta forma las configuraciones iniciales no serán parte del código del programa ni estarán limitadas a unas pocas configuraciones fijas.
   
+<!-- TOC --><a name="exceptions"></a>
 # Manejo de excepciones
 
+El tratamiento de excepciones en un lenguaje como Java resulta muy útil para controlar determinadas situaciones que se producen durante la ejecución del juego.
+
 En esta sección se enumerarán las excepciones que deben tratarse durante el juego, se explicará la forma de implementarlas y se mostrarán ejemplos de ejecución.
+Hemos dividido la sección en dos grandes bloques, uno para las excepciones que se producen en los comandos y controlador, y otro para las excepciones que se producen en el modelo.
+Las excepciones relativas a los ficheros serán explicadas en la sección siguiente. 
 
-## Descripción
+Para simplificar se recomienda incluir todas las excepciones en el paquete `tp1.exceptions`.
 
-El tratamiento de excepciones en un lenguaje como Java resulta muy útil para controlar determinadas situaciones que se producen durante la ejecución del juego; por ejemplo, para mostrar información relevante al usuario sobre lo ocurrido durante el parseo o la ejecución de un comando. En las prácticas anteriores, cada comando invocaba su método correspondiente (generalmente de la clase `Game`) para poder llevar a cabo operaciones sobre el juego.
+<!-- TOC --><a name="command-exceptions"></a>
+## Excepciones en los comandos y controlador
 
-Así, si se quería añadir una planta o zombie al juego, se debía comprobar si la casilla indicada por el usuario estaba libre y si el jugador disponía de suficientes *suncoins* para añadirla. Si alguna de estas dos condiciones no se daba la ejecución del comando devolvía un record `ExecutionResult` con el mensaje de error que se debía mostrar. Además, internamente `ExecutionResult`  también almacenaba un `boolean` para representar si había ocurrido un error a la hora de ejecutar el comando de modo que el juego podía saber si el comando había fallado, pero en algunas situaciones teníamos que imprimir mensajes por pantalla fuera del `Controller` (o en algunos casos muy concretos en los comandos como `HelpCommand`), que es el lugar donde centralizamos la interacción con el usuario.
-
-En esta práctica vamos a contar con el manejo de excepciones para realizar esta tarea, y ciertos métodos van a poder lanzar y procesar determinadas excepciones para tratar determinadas situaciones durante el juego. En algunos casos, este tratamiento consistirá únicamente en proporcionar un mensaje al usuario, mientras que en otros el tratamiento será más complejo. En esta sección no vamos a ocuparnos de tratar las excepciones relativas a los ficheros, que serán explicadas en la sección siguiente.
-
-En una primera aproximación vamos a tratar dos tipos de excepciones. Por una parte, se va a definir un nuevo tipo de excepciones llamado `GameException` que será una superclase que recoge dos nuevos tipos de excepciones: `CommandParseException` y `CommandExecuteException`. La primera de estas dos sirve para tratar los errores que ocurren al parsear un comando, es decir, aquellos producidos durante la ejecución del método `parse()`, tales como comando desconocido, número de parámetros incorrecto y tipo de parámetros no válido. La segunda se utiliza para tratar las situaciones de error que se pueden dar al ejecutar el método `execute()` de un comando; por ejemplo, no tener suficientes *suncoins* para ejecutar un comando o que la casilla donde se quiere añadir un elemento del juego esté ocupada.
-
-Por otra parte, nos ocuparemos de alguna excepción lanzada por el sistema, es decir, no creada ni lanzada por nosotros. En el juego esto ocurre con la excepción `NumberFormatException`, que ya se usó en la práctica anterior y que se lanza cuando se produce un error al tratar de transformar un número entero que se encuentra en formato `String` a su formato habitual `int`.
-
-### Aspectos generales de la implementación
-
-Una de las principales modificaciones que realizaremos al incluir el manejo de excepciones en el juego consistirá en ampliar la comunicación entre los comandos y el controlador. Eliminaremos `ExecutionResult` y utilizaremos un `boolean` para indicar si es necesario pintar el juego, pero también se contemplará la posibilidad de que se haya producido un error de forma que, controlando el flujo de las excepciones que puedan producirse durante el parseo o la ejecución de un comando, se podrá informar del error al usuario. Además, puesto que ahora se van a tratar las situaciones de error tanto en el procesamiento como en la ejecución de los comandos, los mensajes de error mostrados al usuario podrán ser mucho más descriptivos que en la práctica anterior. 
+Una de las principales modificaciones que realizaremos a la hora de incluir el manejo de excepciones en el juego consistirá en ampliar la comunicación entre los comandos y el controlador. Para ello cambiaremos algunos métodos para que en una situación de error, en vez de devolver `null`, lancen una excepción.
 
 Básicamente, los cambios que se deben realizar son los siguientes:
-- Sólo se imprimirá por pantalla `System.out.printXXX` en las clases: `Controller`, `PlantsVsZombies` y comandos `ListPlantsCommand`, `ListZombiesCommand`, `ResetCommand` , `HelpCommand` y `ShowRecordCommand`.
 
-- La cabecera del método `create(String[] parameters)` de la clase `Command` pasa a poder lanzar excepciones de tipo `CommandParseException`:
+- Se debe definir una excepción general `CommandException` y como subclases dos excepciones concretas:
 
-```java
-public Command create(String[] parameter) throws GameException;
-```
+	- `CommandParseException`: excepción para errores que tienen lugar al "parsear" un comando, es decir, aquellos producidos durante la ejecución del método `parse()`, tales como comando desconocido, número de parámetros incorrecto o tipo de parámetros no válido.
+	
+	- `CommandExecuteException`: excepción para representar situaciones de error que se pueden dar al ejecutar el método `execute()` de un comando; por ejemplo, solicitar cambiar el rol a un lemming que no existe.
 
-- La cabecera del método abstracto `execute()` de la clase `Command` pasa a poder lanzar excepciones de tipo `CommandExecuteException`:
+- La cabecera del método `parse(String[] commandWords)` de la clase `Command` pasa a poder lanzar excepciones de tipo `CommandParseException`:
 
-```java
-public abstract boolean execute(GameWorld game) throws GameException;
-```
+	```java
+    public abstract Command parse(String[] parameter) throws CommandParseException;
+	```
 
-- La cabecera del método estático `parse(String[] commandWords)` de `Command` pasa a poder lanzar excepciones de tipo `CommandParseException`:
+	Por ejemplo, el método `parse()` de la clase `NoParamsCommand` que se proporcionó en la práctica anterior pasa a ser de la siguiente forma:
 
-```java
-public static Command parse(String[] commandWords) throws GameException;
-```
+	```java
+	public Command parse(String[] commandWords) throws CommandParseException {
+		if (commandWords.length < 1 || !matchCommandName(commandWords[0]))
+			return null;
+            
+		if (commandWords.length == 1 && matchCommandName(commandWords[0]))
+			return this;
+        
+		throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
+	}
+	```
 
-de forma que el método lanza una excepción del tipo 
+   Fíjate en que los comandos lanzan excepciones solo cuando la entrada concuerda con el nombre (y por lo tanto deberían ser capaces de parsear) pero existe algún fallo en los argumentos pasados a dicho comando (y se da un error).  Es decir, la situación en la que el comando simplemente no puede parsear la entrada porque no concuerda con el nombre no se trata de un error (en cuyo caso no se lanza la excepción sino que se devuelve `null`).
 
-```java
-throw new CommandParseException(Messages.UNKNOWN_COMMAND);
-```
+- La cabecera del método estático `parse(String[] commandWords)` de `CommandGenerator` pasa a poder lanzar excepciones de tipo `CommandParseException`:
 
-en caso de comando desconocido, en lugar de devolver `null` y esperar a que `Controller` trate el caso mediante un simple *if-then-else*.
+	```java
+	public static Command parse(String[] commandWords) throws CommandParseException
+	```
 
-- El controlador debe poder capturar, dentro del método `run()`, las excepciones lanzadas por los dos métodos anteriores, que son subclase de una nueva clase de excepciones `GameException`
+	de forma que el método lanza una excepción del tipo 
 
-```java
+	```java
+	throw new CommandParseException(Messages.UNKNOWN_COMMAND.formatted(commandWords[0]));
+	```
+
+	si se encuentra con un comando desconocido, en lugar de devolver `null` y esperar a que `Controller` trate el caso mediante un simple *if-then-else*.
+
+
+- La excepcion `NumberFormatException` (que se lanza cuando se produce un error al convertir un `String` a un `int`) se capturará para lanzar en su lugar una `CommandParseException`.
+
+   Una buena práctica en el tratamiento de excepciones consiste en recoger una excepción de bajo nivel para, a continuación, lanzar una de alto nivel que contiene otro mensaje que, aunque será necesariamente menos específico que el de la de bajo nivel, es también de utilidad. Por ejemplo, en el método `parse` del comando `SetRoleCommand` podemos hacer lo siguiente:
+
+	```java
+	} catch (NumberFormatException e) {
+		throw new CommandParseException(Messages.INVALID_POSITION.formatted
+			(Messages.POSITION.formatted(row, col));
+	}
+	```
+
+
+- La cabecera del método abstracto `execute()` también se modifica indicando que puede lanzar excepciones de tipo `CommandExecuteException`:
+
+	```java
+	public abstract void execute(GameModel game, GameView view) throws CommandExecuteException;
+	```
+
+- El controlador debe poder capturar, dentro del método `run()`, las excepciones lanzadas por los dos métodos anteriores
+
+	```java
 	public void run() {
 		...
-		hile (!game.isFinished() && !game.isPlayerQuits()) {
+		while (!game.isFinished()) {
 			...
 			try { ... }
-			catch (GameException ex) { ... }		      
+			catch (CommandException e) {
+				view.showError(e.getMessage());
+				Throwable cause = e.getCause();
+				if (cause != null) 
+				    view.showError(cause.getMessage());
+			}
 		}
+		...
 	}
-```
+	```
 
-- Se deben definir nuevas clases (`GameException`, `CommandParseException`, `CommandExecuteException` y algunas más) y lanzar excepciones de estos tipos y tratarlas adecuadamente de forma que el controlador pueda comunicar al usuario los problemas que ocurran. Por ejemplo, el método `create()` de la clase `Command` que se proporcionó en la práctica anterior pasa a ser de la siguiente forma:
+
+Así, todos los mensajes de error se pasan a la vista desde el bucle del método `run()` del controlador.
+
+Uno de los comandos que más excepciones lanzará será el comando `setRole`, que explicaremos en la sección siguiente, pues la gran mayoría de ellas surgen en el modelo. 
+En la **etapa de análisis** (*parseo*), este comando deberá analizar el rol y convertir las filas y columnas a enteros. En todos esos procesos se deberán capturar las excepciones que se produzcan para generar una excepción del tipo `CommandParseException`. 
+En la **ejecución** del comando puede ocurrir que la posición solicitada se encuentre fuera del tablero o que no haya ningún objeto en ella al que aplicar el rol. En la práctica anterior estos dos errores eran indistinguibles pero en esta podremos distinguirlos, lanzando una excepción del tipo `CommandExecuteException` con un mensaje de error adecuado.
+
+Pasamos a explicar cómo se deben tratar las excepciones en el modelo.
+
+<!-- TOC --><a name="gamemodel-exceptions"></a>
+## Excepciones en `GameModel`
+
+Como hemos comentado anteriormente, los errores al ejecutar los comandos surgen de la lógica del juego. En la práctica anterior los métodos invocados por los comandos susceptibles de generar errores devolvían un `boolean` para indicar si su invocación había tenido éxito. Por ejemplo, el método `setRole(Position pos, LemmingRole role)` de `GameModel` devolvía `false` cuando la posición se encontraba fuera del tablero o cuando se intentaba establecer el role en una posición en la que no había ningún lemming al que aplicarlo. 
+Sin embargo, al agrupar ámbos comporatamientos el mensaje de error que podíamos generar se limitaba a informar de que el rol no había podido aplicarse en esa posición, sin concretarse si la posición se encontraba fuera del tablero o no había ningún objeto en dicha posición al que se pudiera aplicar.
+
+En general, los mensajes de error son más descriptivos si se crean allá donde se ha producido el error. Por ello, vamos a considerar que hay un error cuando se solicita el cambio en una posición externa al tablero y mantendrémos el `booleano` para indicar que el game no ha sido modificiado por dicho cambio, al no tener ningún lemming al que aplicar dicho rol en dicha posición.
+Esto nos permitirá mostrar los siguientes mensajes de error:
+
+- Mensaje al intentar establecer un rol en una posición sin lemmings:
+
+	```
+	[DEBUG] Executing: setRole Walker A 2
+
+	[ERROR] Error: Command execute problem
+	[ERROR] Error: No lemming in position (3,2) admits role Walker
+	```
+
+- Mensaje al intentar establecer el rol en una posición fuera del tablero:
+
+	```
+	[DEBUG] Executing: setRole Walker A 25
+
+	[ERROR] Error: Command execute problem
+	[ERROR] Error: Position (0,24) off the board
+	```
+
+<!--- PARSER errors
+- Mensaje al intentar establecer un rol en una posición no valida:
+
+	```
+	[DEBUG] Executing: setRole Walker None 2
+
+	[ERROR] Error: Invalid command parameters
+	[ERROR] Error: Invalid position: (None,3)
+	```
+
+- - Mensaje al intentar establecer un rol inexistente:
+
+	```
+	[DEBUG] Executing: setRole Slepper A 2
+
+	[ERROR] Error: Invalid command parameters
+	[ERROR] Error: Unknown role: Sleeper
+	```
+---> 
+
+
+Por lo tanto, la cabecera del método `setRole` de `GameModel` quedará así:
 
 ```java
-public Command create(String[] parameters) throws GameException {
-  if (parameters.length != 0) {
-    throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
-  }
-  return this;
+public boolean setRole(LemmingRole role, Position pos) throws OffBoardException;
+```
+
+Además, consideraremos las siguientes excepciones lanzadas por los métodos de `GameModel`. Todas ellas heredarán de una clase `GameModelException`.
+
+- `OffBoardException`: excepción que se produce cuando se intenta acceder de manera indebida a una posición fuera del tablero (por ejemplo, al tratar de colocar un rol a un lemming fuera del tablero).
+
+- `GameParseException`: excepción que se produce al parsear un objeto del juego. Como subclases de esta clase se considerarán las siguientes excepciones:
+
+	- `RoleParseException`: excepción lanzada por la clase `LemmingRoleFactory` al tratar de generar un rol con un string que no corresponda a ninguno de los que existen.
+ 
+	- `ObjectParseException`: excepción que se produce al tratar de parsear un objeto en formato texto y no poder convertirlo al objeto correspondiente, pues no sigue el formato establecido. La veremos en la sección de los ficheros.
+	
+<!---
+- `NotAllowedDirectionException`: excepción que se produce al tratar de establecer una dirección del lemming incorrecta (ej. `UP` se puede convertir a una dirección pero no es válida). La utilizaremos en la sección de los ficheros.
+
+	- `GameStateParseException`: excepción que se produce al tratar de parsear un estado del juego en formato texto y no poder convertirlo al estado correspondiente. La veremos en la sección de los ficheros.
+	
+	- `NegativeHeightException`: excepción que se produce al tratar de establecer a un objeto una altura negativa.
+	- `PositionParseException`: excepción que se produce al tratar de parsear una posición y no poder convertir los valores a enteros o no tener el formato adecuado.
+	- `RoleParseException`: excepción que se produce al tratar de parsear un role y no poder convertir al rol correspondiente.
+	- `DirectionParseException`: excepción que se produce al tratar de parsear una dirección y no poder convertirla a la dirección correspondiente.
+	- `HeightParseException`: excepción que se produce al tratar de parsear una altura y no poder convertirla a un entero.
+--->
+
+<!--
+- `GameLoadException`: excepción lanzada al tratar de cargar la configuración de juego de un fichero de texto cuando el formato de éste es incorrecto, bien porque en alguna línea del fichero (ver más adelante) no hay suficientes parámetros o bien porque los parámetros son incorrectos (rol desconocido o formato de la posición incorrecto, etc.). Esta excepción caputarará todas las excepciones de tipo `GameParseException` que se produzcan durante la carga del fichero.
+-->
+
+Volviendo a los errores de ejecución de los comandos, el método `execute` de cada comando  invocará a un método de `GameModel` susceptible de lanzar las excepciones listadas más arriba. En cada caso deberemos construir la nueva excepción `CommandExecuteException` de manera que 
+*recubra* o *decore* a la excepción capturada. Por ejemplo:
+
+```java
+} catch (OffBoardException obe) {
+	throw new CommandExecuteException(Messages.ERROR_COMMAND_EXECUTE, obe);
 }
 ```
 
-Haciendo esto así, todos los mensajes se imprimen desde el bucle del método `run()` del  controlador, cuyo cuerpo se parecerá al código siguiente:
+De esta forma la causa última del error (la excepción `obe`) no se pierde y, en particular, se puede recuperar el mensaje de la excepción recubierta en el controlador (fíjate en el `cause.getMessage()` que aparece en el método `run` del controlador).
+
+<!-- TOC --><a name="carga-config"></a>
+# Carga de la *configuración de juego* de un fichero
+
+En este apartado nuestro objetivo será conseguir *cargar una configuración del juego* contenida en un fichero de texto. Para realizar esta tarea utilizaremos varias técnicas de programación aprendidas anteriormente.
+
+El resultado final será el comando `load` del juego, cuya ayuda se mostrará de la siguiente forma:
+
+```
+[DEBUG] Executing: help
+
+Available commands: 
+.........
+   [l]oad <fileName>: load the game configuration from text file <fileName>
+.........
+```
+
+<!--
+Al igual que en la práctica anterior, se puede resetear el game en ejecución simplemente usando el comando `reset` sin parámetros, o si realizaste la extensión opcional se podría cargar el nivel solicitado. Pero ahora dentro del juego hay que tener en cuenta que este ha podido ser cargado desde un fichero, por lo que cuando se haya cargado desde el fichero se deberá resetear al inicio de dicha configuración. 
+-->
+
+Para conseguirlo, dividiremos la tarea en otras tareas más pequeñas.
+
+
+- Empezaremos explicando el formato del fichero de texto que queremos cargar. 
+
+- Seguiremos creando una factoría de objetos del juego `GameObjectFactory`, pues es necesaria para poder cargar la representación textual de los objetos contenida en el fichero. 
+
+- Tras ello, nos plantearemos crear una clase encargada de la lectura de la configuración del fichero de texto. Llamaremos a esta clase `FileGameConfiguration`, que delegará parte de sus tareas en la factoría de objetos. 
+
+- A partir de aquí, explicaremos los cambios necesarios en `Game` y ya por último podremos crear el comando `LoadCommand`. 
+
+Al finalizar estas modificaciones será necesario comprobar los mensajes de errores que se producirán en la carga del fichero y el comportamiento adecuado del comando `reset` que indirectamente se verá afectado.
+
+Se recomienda en una primera etapa realizar la carga de fichero considerando que el formato del fichero es correcto y posteriormente ajustar el código para que sea capaz de detectar errores en el fichero.
+
+<!-- TOC --><a name="formato-fichero"></a>
+## Formato del fichero de carga.
+
+Para poder cargar una configuración de un `game` desde un fichero de texto es necesario establecer un formato sobre los datos contenidos en el fichero. En este caso explicaremos el formato a través de un ejemplo simple. 
+
+El siguiente ejemplo representa un fichero de `game` con un lemming, dos paredes y una puerta de salida:
+
+```
+0 1 0 0 2 
+(3,2) Lemming RIGHT 1 Walker
+(4,2) Wall
+(4,3) MetalWall
+(5,4) ExitDoor
+```
+
+En la primera línea `0 1 0 0 2` se encuentra el estado del game. Como se puede observar el estado está formado por 5 números enteros, por orden de aparición el *número del ciclo* en el que se encuentra, el *número de lemmings* en el tablero, el *número de lemmings muertos*, el*número de lemmings que han salido con éxito* y el *número de lemmings que es necesario que salgan para ganar el juego*. Tras esta primera línea aparecen, en cualquier orden, los objetos del juego.
+
+Cada línea del fichero es la descripción de un objeto del juego.
+En cada línea el primer dato que aparece es la posición del objeto y el resto de los datos identifican el tipo del objeto y su estado.
+
+La primera línea del fichero 
+
+			`(3,2) Lemming RIGHT 0 Walker` 
+
+es un lemming situado en la fila `3` y en la columna `2` (que se corresponden en la vista del usuario con la fila `D` y la columna `3`); el valor `RIGHT` indica que su dirección es la derecha, el `1` indica que ha caído una posición y por último aparece su rol, en este caso caminante (`Walker`). Tanto para `Walker` como para `Lemming`, `Wall`, `MetalWall` o `ExitDoor` se pueden utilizar sus variantes cortas `L`, `W`, `MW` o `ED` respectivamente.  Como se puede observar el patrón es muy simple:
+
+```
+    posicionDelObjeto tipoDeObjeto atributosDelObjeto
+```
+El lemming es el único objeto que tiene atributos. En este caso primero aparece su estado (dirección y altura de caída) y luego su rol. 
+
+Asumiremos que el número de lemmings en el tablero indicado en el estado inicial del fichero coincide con la cantidad de lemmings que hay en el fichero. 
+De no ser así se cargaría un juego incoherente y el comportamiento probablemente también sería incoherente[^1].
+
+[^1]: Se podría prescindir en el estado del juego de ese valor, por ejemplo, con un contador estático de lemmings creados en la clase lemmings, y así a la vez que vamos incorporándolos al contenedor los podríamos contar, pero eso complicaría más la lectura del fichero, por lo que hemos decidido dejarlo así. 
+No obstante, si quieres realizar dicho contador estático en la clase `Lemming` y detectar la incoherencia del fichero para poder avisar del error lo puedes realizar como parte opcional de la práctica. Al igual que esta es posible tener otras incoherencias en el fichero, tales como valores negativos en el estado del game, etc. que ignoraremos.
+
+
+<!-- TOC --><a name="factoria-objetos"></a>
+## Factoría de objetos del juego
+
+Como hemos visto anteriormente en cada línea del fichero se encuentra la representación textual del objeto, que debería coincidir con la representación textual que devuelve el `toString()` del objeto. Por lo tanto, un string con ese formato deberíamos poder generar un objeto del juego. 
+
+Para crear un objeto del juego a partir de un string crearemos, al igual que hicimos con los roles, una factoría de objetos del juego. Crea la clase `GameObjectFactory` y añade en la clase abstracta *GameObject* el método:
 
 ```java
-		while (!game.isFinished() && !game.isPlayerQuits()) {
+public GameObject parse(String line, GameWorld game) throws ObjectParserException, OffBoardException;
+```
 
-			// 1. Draw
-			if (refreshDisplay) {
-				printGame();
-			}
+Se puede observar que este método devuelve dos tipos de excepciones:
 
-			String[] words = prompt();
-			try {
-				refreshDisplay = false;
-				// 2-4. User action & Game Action & Update
-				Command command = Command.parse(words);
-				refreshDisplay = game.execute(command);
-			} catch (GameException) {
-				System.out.println(error(e.getMessage()));
-			}
-		}
-``` 
+- `ObjectParserException`: excepción lanzada cuando no se puede analizar la línea porque su formato incorrecto, por ejemplo por no tener todos los datos necesarios, por tener más datos de los necesarios, por tener un nombre de objeto o de rol desconocido, por no poder convertir a enteros los datos numéricos, etc.
 
-En el desarrollo de esta práctica debes definir (en algún caso solo incluir y manejar), lanzar y capturar excepciones de, al menos, los siguientes tipos (en la sección siguiente aparecerá alguno más):
-
-- `GameException`: es la superclase de las excepciones que se deben definir y de la que heredan las subclases `CommandParseException` y `CommandExecuteException`.
-
-- `CommandParseException`: nuevo tipo de excepción lanzada por algún error detectado en el parseo de un comando.
-
-  - `NumberFormatException`: excepción del sistema lanzada cuando un elemento proporcionado por el jugador debería ser un dato numérico y no lo es. Esta excepción se *recubrirá* en una `CommandParseException`.
-
-- `CommandExecuteException`: nuevo tipo de excepción lanzada por algún error detectado en la ejecución de un comando y que no tenga un subtipo de excepción más específico.
-
-- `InvalidPositionException`: nuevo tipo de excepción lanzada cuando una posición del juego proporcionada por el usuario está ocupada o no pertenece a una casilla válida. Debería de almacenar la posición (col, row) problemática.
-  - `NotCatchablePositionException`: Excepción específica para representar una posición sobre la que no se ha podido coger ningún objeto (e.g. sol en nuestro caso).
-
-- `NotEnoughCoinsException`: nuevo tipo de excepción lanzada cuando no es posible realizar alguna acción pedida por el usuario al no tener el jugador suficientes *suncoins* para llevarla a cabo.
-
-- `RecordException`: nuevo tipo de excepción lanzada cuando hay problemas en la lectura o escritura del récord.
-
-
-Una buena práctica en el tratamiento de excepciones consiste en recoger una excepción de bajo nivel para a continuación lanzar una de alto nivel que *recubre* la anterior y que contiene otro mensaje que, aunque necesariamente menos específico que el de la de bajo nivel, es también de utilidad. Por ejemplo, en el comando `AddPlantCommand` podemos hacer lo siguiente:
+- `OffBoardException`: excepción lanzada cuando la posición se encuentra fuera del tablero.
+	
+Es posible que para realizar el análisis de la línea para cada *GameObject* necesites métodos auxiliares. Si te sirve de ayuda podrías considerar añadir en las clases adecuadas alguno de los métodos siguientes:
 
 ```java
-  } catch (NumberFormatException nfe) {
-    throw new CommandParseException(Messages.INVALID_POSITION.formatted(parameters[1], parameters[2]), nfe);
-  }
+private static Position getPositionFrom(String line) throws ObjectParseException, OffBoardException {...}
+private static String getObjectNameFrom(String line) throws ObjectParseException {...}
+private static Direction getLemmingDirectionFrom(String line) throws ObjectParseException {...}
+private static int getLemmingHeigthFrom(String line) throws ObjectParseException {...}
+private static LemmingRole getLemmingRoleFrom(String line) throws ObjectParseException {...}
 ```
 
-# Puntuaciones y records de puntuación
+Esta propuesta de métodos se encarga tanto de la parte sintáctica como de la comprobación de la corrección de los datos con respecto al modelo (`OffBoardException`).
+Si estas funciones no te ayudan impleméntalo como consideres más adecuado.
 
-Para esta práctica vamos a implementar un pequeño sistema de puntuaciones para el PlantVsZombies. Por cada zombie que quitemos del juego conseguiremos:
+Fíjate en que, al igual que ocurría con la clase `CommandGenerator`, la factoría de objetos **nunca** devuelve el valor `null`: o bien tiene éxito al crear el objeto o bien lanza una excepción[^2].
 
-- 10 puntos.
-- Si los zombies son **eliminados debido a una explosión** conseguiremos 20 puntos.
 
-La puntuación actual se mostrará durante el juego como parte del estado del mismo:
+[^2]: Seguimos la misma técnica que el método [Integer.valueOf](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#valueOf-java.lang.String- "Integer.valueOf"). 
 
-```
-Command > 
-[DEBUG] Executing: 
+Pasaremos ahora a describir la clase encargada de leer la **configuración del juego** de un fichero de texto.
 
-Number of cycles: 55
-Sun coins: 180
-Remaining zombies: 0
-Generated suns: 42
-Caught suns: 32
-Score: 20
-           0              1              2              3              4              5              6              7              8       
-     ────────────── ────────────── ────────────── ────────────── ────────────── ────────────── ────────────── ────────────── 
-  0 |     S[01]    |  P[03] *[03] |              |              |              |              |              |              |              
-     ────────────── ────────────── ────────────── ────────────── ────────────── ────────────── ────────────── ────────────── 
-  1 |     S[01]    |              |              |              |              |              |              |     *[07]    |              
-     ────────────── ────────────── ────────────── ────────────── ────────────── ────────────── ────────────── ────────────── 
-  2 |     *[01]    |     P[03]    |     *[05]    |              |              |              |              |     *[10]    |              
-     ────────────── ────────────── ────────────── ────────────── ────────────── ────────────── ────────────── ────────────── 
-  3 |              |  P[03] *[04] |     *[08]    |              |              |     *[09]    |    Bz[02]    |              |              
-     ────────────── ────────────── ────────────── ────────────── ────────────── ────────────── ────────────── ────────────── 
+<!-- TOC --><a name="configuracion-juego"></a>
+## *Configuración del juego*: GameConfiguration
+Antes de empezar la tarea es conveniente que nos planteemos la siguiente cuestión:
 
-```
+```¿Qué consideramos que es una `configuración del juego'?```
 
-## Guardar y cargar `Record`
+ Una posible respuesta es que una configuración consiste en unos cuantos valores enteros indicando el número de ciclo, número de lemmings en el tablero, etc. y un contenedor inicializado. Por lo que podríamos considerar que una *configuración del juego* es un objeto que es capaz de suministrar esos valores:
+ 
+ ```java
+	// game status
+	public int getCycle();
+	public int numLemmingsInBoard();
+	public int numLemmingsDead();
+	public int numLemingsExit();
+	public int numLemmingToWin();
+	// game objects
+	public GameObjectContainer getGameObjects();
+ ```
 
-La última extensión que vamos a hacer es la funcionalidad de *guardar* y *cargar* el record del juego. El record se cargará al principio de la partida o cuando hay `reset()`. Veamos el formato del fichero `record.txt`:
+ Tu primera tarea consiste en crear dicho interfaz.
 
-```
-HARD:20
-EASY:20
-INSANE:40
-```
+<!-- TOC --><a name="configuraciones-iniciales"></a>
+## Clase encargada de leer la configuración del fichero: FileGameConfiguration
 
-Para implementar esta responsabilidad, crearemos la clase `Record` que debe de encargarse de:
-- Guardar un récord por cada nivel.
-- Los records no deben almacenarse en ningún orden concreto.
-- El récord se almacena como un entero.
-- Si el fichero de records no existe o está corrupto se debe lanzar una excepción `RecordException` y terminar el juego.
+A continuación, crearemos una clase encargada de leer la configuración del fichero, la clase `FileGameConfiguration` que se situará en el paquete `tp1.logic`. 
+Esta clase tendrá un constructor con dos parámetros: el nombre del fichero y el `game`, para poder *enganchar* los objetos del fichero con el game en ejecución:
 
-> Nota: Si el récord de un nivel no existe se debe crear un valor por defecto (`0` en este caso).
-
-Para facilitarnos las pruebas de esta funcionalidad vamos a crear un comando `ShowRecordCommand`, usando la letra `o`, que muestra el récord del nivel actual por pantalla: 
-
-```
-Command > o
-
-[DEBUG] Executing: o
-
-INSANE record is 30
+```java
+public FileGameConfiguration(String fileName, GameWorld game) throws GameLoadException;
 ```
 
-La lista de comandos disponibles en el `help` queda ahora de la siguiente manera:
+Como puede observarse en su cabecera puede lanza una única excepción:
+- `GameLoadException`: lanzada tanto en caso de que el fichero no exista `FileNotFoundException` (excepción estándar de Java), en el caso de que haya algún problema con la lectura o con el formato del fichero o en el caso de que alguna de las posiciones se encuentren fuera del tablero. 
 
+<!--
+Esta clase será la encargada de procesar el fichero y cargar la configuración del juego en caso de que el fichero sea correcto. El procesado del juego consiste en el procesado del estado del juego y el procesado de los objetos del juego. En ambos casos se puden producir errores que deberán ser tratados adecuadamente y explicaremos más adelante. Considera inicialmente que el único error que puede ocurrir es el de que el fichero no exista o ocurra algún problema de lectura de este.
+-->
+
+<!-- TOC --><a name="game-load"></a>
+## Modificación de la clase Game
+
+Añadiremos al modelo la opción de cargar configuraciones desde un fichero. Para ello sólo nos hará falta crear en `Game` un método público para poder cargar el juego a través del fichero y añadirlo en el interfaz adecuado:
+
+```java
+	public void load(String fileName) throws GameLoadException {...}
 ```
-Command > h
 
-[DEBUG] Executing: h
+Como se puede observar, este método puede lanza la misma excepción que el constructor de la clase `FileGameConfiguration` y además en los mismos casos.
 
+<!-- TOC --><a name="load-command"></a>
+## Comando de carga: LoadCommand
+Ya estamos en situación de poder crear el comando nuevo de carga `LoadCommand`. Su tarea consistirá en cargar una configuración de game desde un fichero.
+
+
+La ayuda general tras la implementación de dicho comando será la siguiente:
+```
+Command > help
+[DEBUG] Executing: help
+	
 Available commands:
-[a]dd <plant> <col> <row>: add a plant in position (col, row)
-[l]ist: print the list of available plants
-[r]eset [<level> <seed>]: start a new game (if level and seed are both provided, they are used to initialize the game)
-[h]elp: print this help message
-[e]xit: terminate the program
-[n]one | "": skip user action for this cycle
-[l]ist[Z]ombies: print the list of available zombies
-[a]dd[Z]ombie <idx> <col> <row>: add a zombie in position (col, row)
-[C]heat[P]lant <plant> <col> <row>: add a plant in position (col, row) without consuming suncoins
-[C]atch <col> <row>: catch a sun, if posible, in position (col, row)
-Rec[o]rd: show record of the current level
-Command > 
+   [s]et[R]ole ROLE ROW COL: sets the lemming in position (ROW,COL) to role ROLE
+      [D]own [C]aver: Lemming caves downwards
+      [P]arachuter: Lemming falls with a parachute
+      [W]alker: Lemming that walks
+   [n]one | "": user does not perform any action
+   [r]eset [numLevel]: reset the game to initial configuration if not numLevel else load the numLevel map
+   [l]oad <fileName>: load the game configuration from text file <fileName>
+   [h]elp: print this help message
+   [e]xit: exits the game
+
+Command > 	
 ```
 
-# Casos de prueba
+<!-- TOC --><a name="file-exceptions"></a>
+## Errores durante la carga del fichero
 
-Hemos creado la clase `tp1.p3.pruebas.PlantsVsZombiesTests` adaptando los tests existentes del siguiente modo:
-- Hemos adaptado mínimamente las tests de la práctica anterior a la hora de mostrar las posiciones incorrectas *que ahora deben de mostrarse*.
-- Hemos añadido tests para verificar que funcionan bien las explosiones encadenadas.
-- Hemos añadido un tests adicional para verificar la gestión de los records funciona correctamente.
-- El orden de la ejecución de los tests es relevante en la práctica 3, en caso de ejecución manual, es necesario ejecutar el test 00-easy_25 antes que el test 09-easy_25.
+Durante la carga de la configuración del juego del fichero se pueden producir muchas excepciones ya que es necesario comprobar que tanto el estado del juego almacenado como cada descripción de objeto (i.e., cada línea) es correcta. Es posible que estos errores los tengas que analizar en el método `parse` de `GameObject` o de alguna de sus subclases.
+
+- Tiene que existir el fichero:
+
+	```
+	Command > load conf
+	[DEBUG] Executing: load conf
+
+	[ERROR] Error: Invalid file "conf" configuration
+	[ERROR] Error: File not found: "conf"
+	```
+
+- La línea de estado del game mantiene el formato adecuado.
+
+	```
+	Command > load conf_2
+	[DEBUG] Executing: load conf_2
+
+	[ERROR] Error: Invalid file "conf_2" configuration
+	[ERROR] Error: Incorrect game status "2 0 3 5"
+	```
+
+- Los objetos que aparecen en el fichero son de tipo conocido:
+
+	```
+	Command > load conf_3
+	[DEBUG] Executing: r conf_3
+
+	[ERROR] Error: Invalid file "conf_3" configuration
+	[ERROR] Error: Unknown game object: "(3,2) Potato RIGHT 10 Walker"
+	```
+
+- La posición de cada objeto dado está dentro del tablero:
+
+	```
+	Command > load conf_4
+	[DEBUG] Executing: load conf_4
+
+	[ERROR] Error: Invalid file "conf_4" configuration
+	[ERROR] Error: Object position is off board: "(3,18) Lemming RIGHT 10 Walker"
+	```
+
+
+- Las direcciones de los lemmings son valores conocidos:
+
+	```
+	Command > load conf_5
+	[DEBUG] Executing: r conf_5
+
+	[ERROR] Error: Invalid file "conf_5" configuration
+	[ERROR] Error: Unknown object direction: "(3,2) Lemming NORTH 10 Walker"
+    ```
+ 
+- Las direcciones de los lemmings son sólo `RIGHT` y `LEFT`:
+
+	```
+	Command > load conf_6
+	[DEBUG] Executing: r conf_6
+
+	[ERROR] Error: Invalid file "conf_6" configuration
+	[ERROR] Error: Invalid lemming direction: "(3,2) Lemming UP 10 Walker"
+	```
+
+- Los lemmings tienen un rol de tipo conocido:
+
+	```
+	Command > load conf_7
+	[DEBUG] Executing: r conf_7
+
+	[ERROR] Error: Invalid file "conf_7" configuration
+	[ERROR] Error: Invalid lemming role: "(3,2) Lemming RIGHT 10 Looser"
+	```
+
+- Cada línea tiene el formato adecuado porque alguno de sus atributos no tiene el formato adecuado. Por ejemplo, los valores de las posiciones y la altura se deben poder convertir a números.
+
+	```
+	Command > load conf_8
+	[DEBUG] Executing: load conf_8
+
+	[ERROR] Error: Invalid file "conf_8" configuration
+	[ERROR] Error: Invalid object position: "(a,3) Lemming RIGHT 2 Walker"
+	```
+
+<!--
+- Y por último, la altura es un valor positivo:
+
+	```
+	Command > load conf_9
+	[DEBUG] Executing: load conf_9
+
+	[ERROR] Error: Invalid file "conf_9" configuration
+	[ERROR] Error: Height is negative: -3
+	```
+-->
+
+Esas excepciones se capturarán directamente en el método `execute` de `LoadCommand`. Ten en cuenta que si la carga del fichero falla se gestiona esa excepción, informando al usuario del problema, y el juego debe poder continuar como si no se hubiese intentado la carga.
+
+<!-- TOC --><a name="reset-load-game"></a>
+## Ajustando el método `reset` de Game
+
+Ahora que ya has completado la implementación, una de las cuestiones que te debes plantear es que el `reset` debe seguir funcionando correctamente. 
+En particular, realizar un reset desde un juego cargado desde un fichero debería devolvernos a la configuración cargada desde este.
+
+Para realizar esta tarea es posible que te ayude incluir en la clase `FileGameConfiguration` una constante `NONE`:
+
+```java
+public static final GameConfiguration NONE = new FileGameConfiguration();
+```
+
+Así, desde `Game` se puede usar la constante `FileGameConfiguration.NONE` como indicador de que se deber resetear el juego actual a su situación inicial. Por ejemplo, en `reset(...)` de `Game` se puede escribir:
+
+```java
+	if (conf == FileGameConfiguration.NONE) {
+		// inicialización estándar 
+	} else {
+		// inicialización usando conf
+	}
+```
+
+Revisa que funciona correctamente dicho `reset`, pues es posible que sin darte cuenta tengas algún error de encapsulamiento en la clase `FileGameConfiguration` que descubras ahora.
+
+<!-- TOC --><a name="save-command"></a>
+## Comando `SaveCommand` (opcional)
+
+Una parte opcional bastante simple consiste en guardar en un fichero el estado actual del juego. Recuerda que el método `toString()` debería devolver la representación textual del estado del game. Por lo tanto, si consigues que lo devuelva en el mismo formato que hemos estado usando para la carga desde un fichero la tarea consiste únicamente en añadir un nuevo comando `SaveCommand` y un nuevo método en `Game`:
+
+```java
+	public void save(String fileName) throws GameModelException {...}
+```
+
+Este método solo arrojaría excepciones en caso de que se produjera un error en la escritura del fichero. Esto podría ocurrir, por ejemplo, en casos donde el fichero estuviera bloqueado por el sistema operativo.
+
+El resultado del comando help de la práctica con todas las extensiones será el siguiente:
+
+```
+Command > help
+[DEBUG] Executing: help
+	
+Available commands:
+   [s]et[R]ole ROLE ROW COL: sets the lemming in position (ROW,COL) to role ROLE
+      [D]own [C]aver: Lemming caves downwards
+      [P]arachuter: Lemming falls with a parachute
+      [W]alker: Lemming that walks
+   [n]one | "": user does not perform any action
+   [r]eset [numLevel]: reset the game to initial configuration if not numLevel else load the numLevel map
+   [l]oad <fileName>: load the game configuration from text file <fileName>
+   [s]ave <fileName>: save the actual configuration in text file <fileName>
+   [h]elp: print this help message
+   [e]xit: exits the game
+
+Command > 	
+```
+
+<!-- TOC --><a name="level-conf"></a>
+## Sacando las configuraciones iniciales de la clase Game (opcional)
+
+Otra cuestión bastante simple consiste en sacar las configuraciones iniciales de la clase `Game` (las que se cargan usando `nLevel`), creando una clase que implemente `GameConfiguration` que se encargue de ellas. 
+Esta clase sería similar a `FileGameConfiguration` y podría tener dos constructores: uno que reciba el *número del nivel*, que lanzaría una excepción en caso de que dicho nivel no sea válido, y otro sin el número de nivel, que cargaría el mapa por defecto.
+
+Si te animas y tienes tiempo es bastante sencilla su implementación y te permitirá tener un código más limpio y ordenado.
