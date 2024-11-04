@@ -1,0 +1,11 @@
+load conf
+load conf_2
+load conf_3
+load conf_4
+load conf_5
+load conf_6
+load conf_7		
+load conf_8
+load conf_9
+load conf_0
+exit

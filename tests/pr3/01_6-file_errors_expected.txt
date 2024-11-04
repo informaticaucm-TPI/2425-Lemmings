@@ -1,0 +1,92 @@
+Lemmings 3.0
+
+Number of cycles: 0
+Lemmings in board: 4
+Dead lemmings: 0
+Lemmings exit door: 0 ┃2
+
+      1    2    3    4    5    6    7    8    9   10  
+   ┌——————————————————————————————————————————————————┐
+  A┃                                               B  ┃A
+  B┃                                        ▓▓▓▓▓▓▓▓▓▓┃B
+  C┃                                                  ┃C
+  D┃            B    B                                ┃D
+  E┃          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         ┃E
+  F┃                     🚪            ▓▓▓▓▓          ┃F
+  G┃                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ┃G
+  H┃                                                  ┃H
+  I┃  B                                     ▓▓▓▓▓     ┃I
+  J┃▓▓▓▓▓▓▓▓▓▓                              ▓▓▓▓▓▓▓▓▓▓┃J
+   └——————————————————————————————————————————————————┘
+      1    2    3    4    5    6    7    8    9   10  
+
+Command > [DEBUG] Executing: load conf
+
+[ERROR] Error: Invalid file "conf" configuration
+[ERROR] Error: File not found: "conf"
+
+Command > [DEBUG] Executing: load conf_2
+
+[ERROR] Error: Invalid file "conf_2" configuration
+[ERROR] Error: Invalid game status "2 0 3 5"
+
+Command > [DEBUG] Executing: load conf_3
+
+[ERROR] Error: Invalid file "conf_3" configuration
+[ERROR] Error: Unknown game object: "(3,2) Potato RIGHT 10 Walker"
+
+Command > [DEBUG] Executing: load conf_4
+
+[ERROR] Error: Invalid file "conf_4" configuration
+[ERROR] Error: Object position is off board: "(3,18) Lemming RIGHT 10 Walker"
+
+Command > [DEBUG] Executing: load conf_5
+
+[ERROR] Error: Invalid file "conf_5" configuration
+[ERROR] Error: Unknown object direction: "(3,2) Lemming NORTH 10 Walker"
+
+Command > [DEBUG] Executing: load conf_6
+
+[ERROR] Error: Invalid file "conf_6" configuration
+[ERROR] Error: Invalid lemming direction: "(3,2) Lemming UP 10 Walker"
+
+Command > [DEBUG] Executing: load conf_7		
+
+[ERROR] Error: Invalid file "conf_7" configuration
+[ERROR] Error: Invalid lemming role: "(3,2) Lemming RIGHT 10 Looser"
+
+Command > [DEBUG] Executing: load conf_8
+
+[ERROR] Error: Invalid file "conf_8" configuration
+[ERROR] Error: Invalid object position: "(a,3) Lemming RIGHT 2 Walker"
+
+Command > [DEBUG] Executing: load conf_9
+
+[ERROR] Error: Invalid file "conf_9" configuration
+[ERROR] Error: File not found: "conf_9"
+
+Command > [DEBUG] Executing: load conf_0
+
+Number of cycles: 0
+Lemmings in board: 4
+Dead lemmings: 0
+Lemmings exit door: 0 ┃4
+
+      1    2    3    4    5    6    7    8    9   10  
+   ┌——————————————————————————————————————————————————┐
+  A┃  B         B                                  B  ┃A
+  B┃▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓XXXXX▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓┃B
+  C┃▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓┃C
+  D┃            B                                     ┃D
+  E┃     ▓▓▓▓▓                                        ┃E
+  F┃                                                  ┃F
+  G┃          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓     XXXXX     ▓▓▓▓▓     ┃G
+  H┃                     🚪            ▓▓▓▓▓          ┃H
+  I┃                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓XXXXX▓▓▓▓▓     ┃I
+  J┃▓▓▓▓▓▓▓▓▓▓                              ▓▓▓▓▓▓▓▓▓▓┃J
+   └——————————————————————————————————————————————————┘
+      1    2    3    4    5    6    7    8    9   10  
+
+Command > [DEBUG] Executing: exit
+
+Player leaves the game

@@ -1,0 +1,23 @@
+load conf_0
+none
+setRole DownCaver A 2
+none
+n
+none
+setRole DownCaver A 7
+setRole DownCaver A 8
+setRole DownCaver B 8
+setRole DownCaver A 5
+none
+n
+none
+setRole Parachuter B 2
+setRole Parachuter G 8
+n
+none
+setRole DownCaver G 8
+n
+
+none
+n
+exit

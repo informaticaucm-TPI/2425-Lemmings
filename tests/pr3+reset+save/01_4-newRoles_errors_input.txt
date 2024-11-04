@@ -1,0 +1,19 @@
+setRole Walker I 2 33
+setRole Patata I 2
+sEtROle Walker I 1
+sEtROle w I 1
+setRole Parachuter A 1
+setRole Parachuter A 100
+setRole Parachu A 10
+sEtROle doWnCaVer A 10
+setRole Parachuter B 10
+setRole Parachuter C 10
+sr walKEr C 10
+setRole Parachuter D 10
+none
+n
+noNe
+nonE
+None
+N
+exit

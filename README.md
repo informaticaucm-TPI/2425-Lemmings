@@ -7,3 +7,4 @@
 
 - [Enunciado de la Práctica 2.1](./enunciados/practica2/practica2_1.md) ([English](./enunciados/practica2/practica2_1_en.md))
 - [Enunciado de la Práctica 2.2](./enunciados/practica2/practica2_2.md) ([English](./enunciados/practica2/practica2_2_en.md))
+- [Enunciado de la Práctica 3](./enunciados/practica3/practica3.md) ([English](./enunciados/practica3/practica3_en.md))

@@ -1,0 +1,11 @@
+none
+n
+save patata
+n
+reset
+load patata
+none
+setRole Parachuter A 5
+none
+reset
+exit

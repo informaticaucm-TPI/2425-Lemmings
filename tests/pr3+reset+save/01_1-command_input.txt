@@ -1,0 +1,22 @@
+h
+help
+noExiste
+none
+r
+reseT
+noNe
+rEsEt 134
+none
+r 230
+
+heLP
+n
+rEset 2
+noNE
+reSet 1
+noNe
+resEt 0
+NoNe
+e
+exit
+

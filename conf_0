@@ -1,0 +1,42 @@
+0 4 0 0 4 
+(3,2) Lemming  RIGHT 0 Walker
+(0,9) Lemming  RIGHT 0 Walker
+(0,0) Lemming  RIGHT 0 Walker
+(0,2) Lemming  RIGHT 0 Walker
+(1,0) Wall 
+(1,1) Wall 
+(1,2) Wall 
+(1,3) Wall 
+(1,4) MetalWall 
+(1,5) Wall 
+(1,6) Wall 
+(1,7) Wall 
+(1,8) Wall 
+(1,9) Wall 
+(2,0) Wall 
+(2,1) Wall 
+(2,2) Wall 
+(2,3) Wall 
+(2,4) Wall 
+(2,5) Wall 
+(2,6) Wall 
+(2,7) Wall 
+(2,8) Wall 
+(2,9) Wall 
+(4,1) Wall 
+(6,2) Wall 
+(6,3) Wall 
+(6,4) Wall 
+(6,6) MetalWall 
+(6,8) Wall 
+(8,4) Wall 
+(8,5) Wall 
+(8,6) Wall 
+(8,7) MetalWall 
+(7,7) Wall 
+(9,0) Wall 
+(9,1) Wall 
+(8,8) Wall 
+(9,8) Wall 
+(9,9) Wall 
+(7,4) ExitDoor 

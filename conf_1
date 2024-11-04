@@ -1,0 +1,21 @@
+0 4 0 0 2 
+(3,2) Lemming  RIGHT 0 Walker
+(0,9) Lemming  RIGHT 0 Walker
+(8,0) Lemming  RIGHT 0 Walker
+(1,8) Wall 
+(1,9) Wall 
+(4,2) Wall 
+(4,3) Wall 
+(4,4) Wall 
+(6,4) Wall 
+(6,5) Wall 
+(6,6) Wall 
+(6,7) Wall 
+(5,7) Wall 
+(9,0) Wall 
+(9,1) Wall 
+(8,8) Wall 
+(9,8) Wall 
+(9,9) Wall 
+(5,4) ExitDoor 
+(3,3) Lemming  RIGHT 0 Walker
