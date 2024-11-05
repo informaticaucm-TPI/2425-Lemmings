@@ -289,7 +289,7 @@ En cada línea el primer dato que aparece es la posición del objeto y el resto 
 
 La primera línea del fichero 
 
-			`(3,2) Lemming RIGHT 0 Walker` 
+			`(3,2) Lemming RIGHT 1 Walker` 
 
 es un lemming situado en la fila `3` y en la columna `2` (que se corresponden en la vista del usuario con la fila `D` y la columna `3`); el valor `RIGHT` indica que su dirección es la derecha, el `1` indica que ha caído una posición y por último aparece su rol, en este caso caminante (`Walker`). Tanto para `Walker` como para `Lemming`, `Wall`, `MetalWall` o `ExitDoor` se pueden utilizar sus variantes cortas `L`, `W`, `MW` o `ED` respectivamente.  Como se puede observar el patrón es muy simple:
 
@@ -373,7 +373,7 @@ Esta clase tendrá un constructor con dos parámetros: el nombre del fichero y e
 public FileGameConfiguration(String fileName, GameWorld game) throws GameLoadException;
 ```
 
-Como puede observarse en su cabecera puede lanza una única excepción:
+Como puede observarse en su cabecera puede lanzar una única excepción:
 - `GameLoadException`: lanzada tanto en caso de que el fichero no exista `FileNotFoundException` (excepción estándar de Java), en el caso de que haya algún problema con la lectura o con el formato del fichero o en el caso de que alguna de las posiciones se encuentren fuera del tablero. 
 
 <!--
@@ -389,7 +389,7 @@ Añadiremos al modelo la opción de cargar configuraciones desde un fichero. Par
 	public void load(String fileName) throws GameLoadException {...}
 ```
 
-Como se puede observar, este método puede lanza la misma excepción que el constructor de la clase `FileGameConfiguration` y además en los mismos casos.
+Como se puede observar, este método puede lanzar la misma excepción que el constructor de la clase `FileGameConfiguration` y además en los mismos casos.
 
 <!-- TOC --><a name="load-command"></a>
 ## Comando de carga: LoadCommand
