@@ -371,3 +371,66 @@ of the `DownCaverRole` class.
 
 <!-- TOC --><a name="detalles-downCaver-metalWall"></a>
 ###  Details of `DownCaverRole` and `MetalWall`
+
+We implement the new game object in a class called `MetalWall` on which interaction with other game objects has no effect. 
+
+We implement the new role in a class called `DownCaverRole`. As state above, the caver role causes a lemming to dig, that is, to eliminate the solid object in the cell immediately below it, if the object is soft, and then occupy the position formerly occupied by this soft solid object. The icon used to represent a caver lamming is:  `Messages.LEMMING_DOWN_CAVER`. If the lemming cannot dig, the caver role has no effect. The help message for the caver role is: `[D]own[C]aver: Lemming caves downwards` (indicating that the long name is `DownCaver` and the short name is `DC`).
+
+To enable the lemmings to interact with the `Wall` class requires overwriting the method
+
+```java
+    public boolean interactWith(Wall obj){...}
+```
+
+in the `Lemming` class. Note that the interaction between lemmings and other game objects depend on the role that the lemming has at the time of interaction. For this reason, in deciding what it's behaviour is to be, the lemming must involve the role. To this end, we add the following methods to the `LemmingRole` interface:
+
+```java
+	public boolean receiveInteraction(GameItem other, Lemming lemming);
+
+	public boolean interactWith(Lemming receiver, Lemming lemming);
+	public boolean interactWith(Wall wall, Lemming lemming);
+	public boolean interactWith(ExitDoor door, Lemming lemming);
+```
+
+The second parameter of these methods plays the same role as the parameter of type `Lemming` in the `advance` method, that is, the lemming that has that role.
+
+Notice that the great majority of lemmings do not interact with any other game objects. This lack of interaction could be programmed as the default behaviour either by creating a superclass of the other roles which contains this default behaviour (which will be abstract) or by creating a default method in the `LemmingRole` interface.
+
+
+<!-- TOC --><a name="dd-exitDoor"></a>
+###  Applying *double-dispatch* to the `ExitDoor` (optional)
+
+To verify the versatility of the ***double dispatch*** we propose to eliminate the method `isExit` from all game objects and, in consequence also from the game and the container (it is, in any case, a type of *DIY instanceof*), implementing only the method 
+
+```java
+    public boolean interactWith(ExitDoor obj){...}
+```
+
+in the lemming. This change reduces the size of the code. Such a simplification could be applied to other methods (though this is not obligatory).
+
+<!-- <span style="color:red">**AE**: ¿quitamos del enunciado la extensión del reset?</span> -->
+<!-- TOC --><a name="reset-num"></a>
+### Extending the `reset` command (optional)
+
+We could extend slightly the functionality of the `reset` command so that it not only resets the current game but also enables a different initial state to be loaded. This can be accomplished by adding an optional argument: the level. If this argument is absent, the previous implementation of the `reset` command is used, if the argument is present and corresponds to a predefined level, the corresponding initial state is loaded, if the argument is present and does not correspond to a predefined level, the following error message is printed:
+
+```
+[ERROR] Error: Not valid level number
+```
+
+The output of the help command will now be as follows:
+
+```
+Command > h
+[DEBUG] Executing: h
+
+Available commands:
+   [s]et[R]ole ROLE ROW COL: set the lemming in position (ROW,COL) to role ROLE
+      [D]own[C]aver: Lemming caves downwards
+	  [P]arachuter: Lemming falls with a parachute
+      [W]alker: Lemming that walks
+   [n]one | "": user does not perform any action
+   [r]eset [numLevel]: reset the game to initial configuration, if not numLevel, else load the initial state for numLevel
+   [h]elp: print this help message
+   [e]xit: exit the game
+```
