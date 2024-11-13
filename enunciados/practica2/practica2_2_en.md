@@ -124,8 +124,9 @@ public interface LemmingRole {
 }
 ```
 
-For the moment, a role consists of the implementation of the two methods `play` and `getIcon`. The latter method will contain
-a non-empty body if there is any action to be taken on assigning the role to a lemming. To enable lemmings to change role at
+For the moment, a role consists of the implementation of the two methods `play` and `getIcon`. The implementation of the
+`start` method will comprise
+a non-empty body only if there is any action to be taken on assigning the role to a lemming. To enable lemmings to change role at
 execution time, we use the interface as the type of the attribute `role` of the lemming class:
 
 ```java
