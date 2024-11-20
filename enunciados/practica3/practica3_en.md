@@ -249,3 +249,109 @@ In the case of the `setRole` command, the parsing of its parameters may generate
 `CommandParseException`s, or system exceptions that we wrap in `CommandParseException`s, and its
 execution in the model part of the application may generate exceptions that we wrap in
 `CommandExecuteException`s.
+
+<!-- TOC --><a name="gamemodel-exceptions"></a>
+## Exceptions thrown in the model part of the program
+
+As stated above, the errors in the execution of commands arise in the game logic, that is, in the
+model part of the program and, in the previous assignment, the methods involved returned a `boolean`
+value to indicate whether the execution had succeeded or failed. For example, the `setRole` method
+of `GameModel` returned `false` when the position passed as argument was outside the board or when
+no lemming is present on that position. However, returning the value `false` did not permit these
+two types of error to be distinguished. Generating error data, in particular an error message, at
+the point in the code where the error occurs enables such distinction. We could maintain the
+boolean to indicate whether or not the game state has been modified. The program con now display
+the following error messages (notice the two messages, one from each level of exception):
+
+- On trying to apply `setRole` to a position with no lemming:
+
+	```
+	[DEBUG] Executing: setRole Walker A 2
+
+	[ERROR] Error: Command execute problem
+	[ERROR] Error: No lemming in position (3,2) admits role Walker
+	```
+
+- On trying to apply `setRole` to a position outside the board:
+
+	```
+	[DEBUG] Executing: setRole Walker A 25
+
+	[ERROR] Error: Command execute problem
+	[ERROR] Error: Position (0,24) off the board
+	```
+
+<!--- PARSER errors
+- Mensaje al intentar establecer un rol en una posición no valida:
+
+	```
+	[DEBUG] Executing: setRole Walker None 2
+
+	[ERROR] Error: Invalid command parameters
+	[ERROR] Error: Invalid position: (None,3)
+	```
+
+- - Mensaje al intentar establecer un rol inexistente:
+
+	```
+	[DEBUG] Executing: setRole Slepper A 2
+
+	[ERROR] Error: Invalid command parameters
+	[ERROR] Error: Unknown role: Sleeper
+	```
+---> 
+
+We define a new exception `OffBoardException` to be thrown when there is an attempt to access a position
+which is outside the board, which the method `setRole` of the `GameModel` interface is now declared to throw:
+
+```java
+public boolean setRole(LemmingRole role, Position pos) throws OffBoardException;
+```
+
+Similarly, we define the following exceptions, to be thrown by other methods of the `GameModel`
+interface:
+
+- `GameParseException`: to be thrown when parsing the text representation of a game object; this class has two subclasses:
+
+   - `RoleParseException`: to be thrown by the `LemmingRoleFactory` class on parsing a `String` that does not
+     correspond to any known role (c.f. the `CommandParseException` thrown by the `parse` method of the
+     `CommandGenerator` class).
+ 
+   - `ObjectParseException`: to be thrown during deserialization (see below) when trying to parse a `String`
+     that does not correspond to the text representation of the expected game object.
+	
+as well as an exception class from which all these new exceptions inherit: `GameModelException`
+
+
+<!---
+- `NotAllowedDirectionException`: excepción que se produce al tratar de establecer una dirección del lemming incorrecta (ej. `UP` se puede convertir a una dirección pero no es válida). La utilizaremos en la sección de los ficheros.
+
+	- `GameStateParseException`: excepción que se produce al tratar de parsear un estado del juego en formato texto y no poder convertirlo al estado correspondiente. La veremos en la sección de los ficheros.
+	
+	- `NegativeHeightException`: excepción que se produce al tratar de establecer a un objeto una altura negativa.
+	- `PositionParseException`: excepción que se produce al tratar de parsear una posición y no poder convertir los valores a enteros o no tener el formato adecuado.
+	- `RoleParseException`: excepción que se produce al tratar de parsear un role y no poder convertir al rol correspondiente.
+	- `DirectionParseException`: excepción que se produce al tratar de parsear una dirección y no poder convertirla a la dirección correspondiente.
+	- `HeightParseException`: excepción que se produce al tratar de parsear una altura y no poder convertirla a un entero.
+--->
+
+<!--
+- `GameLoadException`: excepción lanzada al tratar de cargar la configuración de juego de un fichero de texto cuando el formato de éste es incorrecto, bien porque en alguna línea del fichero (ver más adelante) no hay suficientes parámetros o bien porque los parámetros son incorrectos (rol desconocido o formato de la posición incorrecto, etc.). Esta excepción caputarará todas las excepciones de tipo `GameParseException` que se produzcan durante la carga del fichero.
+-->
+
+The above exceptions are to be thrown by methods of the `GameModel` interface that are called from one or more
+of the `execute` methods of the commands. As already stated, they should be caught in the corresponding `execute`
+method and rethrown, wrapped in a `CommandExecuteException`. For example:
+
+```java
+} catch (OffBoardException obe) {
+	throw new CommandExecuteException(Messages.ERROR_COMMAND_EXECUTE, obe);
+}
+```
+
+With this procedure, no information is lost since the wrapped exception can be recovered using the
+`getCause` method of the `Throwable` class (see the above code for the `run` method of the controller).
+
+<!-- TOC --><a name="save-command"></a>
+# Saving the state of the game to file: the `save` command
+
