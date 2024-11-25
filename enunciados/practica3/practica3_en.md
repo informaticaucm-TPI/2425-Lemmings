@@ -117,8 +117,8 @@ We define a new exception class called `CommandException` and two subclasses:
 
 ### Parsing errors
 
-First we deal with the occurrence of errors during the parsing, which will lead to the throwing
-of a `CommandParseException`, instead of returning `null` as was done in the previous
+First we deal with the occurrence of errors during the parsing of the commands, which will lead
+to the throwing of a `CommandParseException`, instead of returning `null` as was done in the previous
 assignment. 
 
 The `parse` method of the `Command` class must now be declared to throw exceptions of type 
