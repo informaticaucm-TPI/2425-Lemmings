@@ -4,18 +4,21 @@
 - [Exception handling](#exceptions)
 	- [Exceptions in the commands and the controller](#command-exceptions)
 	- [Exceptions in `GameModel`](#gamemodel-exceptions)
-- [Saving the state of the game to file: the `save` command](#save-command)
-	- [File format](#formato-fichero)
-- [Loading the state of the game from file](#carga-config)
+- [File handling](#files)
+	- [Serialization / deserialización](#serialization)
+	- [Saving the game state to file: the `save` command](#save-command)
+	- [Loading the game state from file: the `load` command](#load-command)
 	- [Game object factory](#factoria-objetos)
-	- [Reading the file data: the `FileGameConfiguration` class](#configuraciones-iniciales)
 	- [Encapsulating the loaded state of the game: the `GameConfiguration` class](#configuracion-juego)
-	- [Reading the state of the game from file: the `load` command](#load-command)
+	- [Reading the file data: the `FileGameConfiguration` class](#configuraciones-iniciales)
 	- [Modifying the `Game` class to implement the load command](#game-load)
+	- [The `LoadCommand` class](#load-command-class)
 	- [Errors occuring during the loading of a file](#file-exceptions)
 	- [Adapting the `reset` method of the `Game` class](#reset-load-game)
-	- [Initial configurations of the gameSacando las configuraciones iniciales de la clase Game (opcional)](#level-conf)
+	- [Details of the `save` command (optional)](#save-command-details)
+	- [Initial configurations of the game (optional)](#level-conf)
 <!-- TOC end -->
+
 <!-- TOC --><a name="practica-3-excepcionesYficheros"></a>
 # Assignment 3: Exception-handling and file handling
 
@@ -352,6 +355,329 @@ method and rethrown, wrapped in a `CommandExecuteException`. For example:
 With this procedure, no information is lost since the wrapped exception can be recovered using the
 `getCause` method of the `Throwable` class (see the above code for the `run` method of the controller).
 
+<!-- TOC --><a name="files"></a>
+# File-handling
+
+<!-- TOC --><a name="serialization"></a>
+## Serialization / deserialization
+
+In computing, the term serialization refers to converting the current state of an executing
+program, or of part of an executing program, into a stream of bytes, usually with the
+objective of saving it to a file or transmitting it on a network. The term deserialization
+refers to the inverse process of reconstructing the state of an executing program, or part of
+an executing program, from a stream of bytes. Serialization/deserialization in which the
+generated stream is a text stream is sometimes referred to as stringification/destringification.
+Clearly, the format used for serialization/stringification should be designed in such a way
+as to facilitate deserialization/destringification.
+
+Java incorporates a generic serialization mechanism capable of converting any Java objects,
+and therefore any executing Java program or part of any executing Java program,
+into a binary stream (see classes `ObjectInputStream` and `ObjectOutputStream`).
+We do not require such a generic serialization/deserialization
+mechanism; our interest is simply to serialize to, and deserialize from, a text stream
+that represents the current state of a lemmings game, with a view
+to writing this state to, and reading this state from, a text file. Note that the textual
+representation produced by the view is not a suitable format for serialization since
+deserialization of this format would be a rather complicated enterprise. We therefore
+define a text-serialized format, in which the state of the game is represented as a sequence
+of game elements, each of which is represented as a sequence of values. This format could be
+useful for debugging purposes as well as for saving the state of the game to a text file.
+
+### Serialization format
+
+We explain our text-based serialization format via a simple example.
+
+The following represents the serialization of a game comprising one lemming, two walls
+and an exit door:
+
+```
+0 1 0 0 2 
+(3,2) Lemming RIGHT 1 Walker
+(4,2) Wall
+(4,3) MetalWall
+(5,4) ExitDoor
+```
+
+The numbers on the first line represent the counter data, from left to right:
+
+- the cycle number
+- the number of lemmings on the board
+- the number of dead lemmings
+- the number of lemmings that have successfully exited the game
+- the number of lemmings that need to succesfully exit to win the game.
+
+Each of the following lines describes a game object, according to the pattern
+
+```
+    gameObjectPosition gameObjectType gameObjectAttributes
+```
+
+where the lemming is the only game object that has attributes. In the above example, the first of the
+textual representations of a game object represents, from left to right:
+
+- a game object situated in row `3` and column `2` (which corresponds to the user coordinates: row `D` and column `3`)
+- which is a lemming
+- whose direction of movement is `RIGHT`
+- which is falling and has fallen `1` vertical position
+- whose current role is `Walker`
+
+Note that the type of game object can be identified either by its full name or by its short name, so
+`Lemming`, `Wall`, `MetalWall` and `ExitDoor` can be represented by `L`, `W`, `MW` o `ED` respectively.
+
+
 <!-- TOC --><a name="save-command"></a>
-# Saving the state of the game to file: the `save` command
+## Saving the game state to file: the `save` command
+
+After defining our serialization format, the next logical step is to introduce a new command,
+the `save` command, used to save the serialized current state of the game in a file.
+However, since *implementation of this command is optional*, we postpone the details of
+its presentation until later in this document, see the section
+[Details of the `save` command (optional)](#save-command-details).
+
+
+<!-- TOC --><a name="load-command"></a>
+## Loading the game state from file: the `load` command
+
+In the following sections we present an implementation of a new command, the `load` command,
+used to read a state of the game from a file. The implementation of the `load` command
+is inevitably more complicated than that of the `save` command. We divide the task of
+implementing this command into the following subtasks:
+
+- create a `GameObjectFactory` class to be used to parse the textual representation of
+  the game objects,
+
+- define a `GameConfiguration` interface to be implemented by classes representing a game
+  configuration, i.e a valid state of the lemmings game,
+
+- create a `FileGameConfiguration` class, responsible for loading a game configuration
+  from file and storing it,
+
+- introduce the necessary changes in the `Game` class,
+
+- create the `LoadCommand` class.
+
+On finishing these changes, we will need to check the exceptions that may be thrown on
+loading a file, though, regarding errors in the content of the file, we recommend first
+developing the code on the assumption that the file contains no such errors and then
+adjusting the code so that it can handle the exceptions that may be produced.
+
+Note that the behaviour of the `reset` command will need to be adapted to the existence
+of the `load` command (reset should mean return to the last loaded state).
+
+
+<!-- TOC --><a name="factoria-objetos"></a>
+## Game object factory
+
+Every line of the above-described serialization format, except the first, contains a textual
+representation of a game object. The deserialization, therefore, must create
+a game object from each such textual representation. To do so, we create a `GameObjectFactory`
+class, similar to the `LemmingRolesFactory` class, containing the following method:
+
+```java
+public GameObject parse(String line, GameWorld game) throws ObjectParserException, OffBoardException;
+```
+
+- `ObjectParserException`: thrown when a line cannot be parsed as the textual representation of
+  a game object due to some problem with the format such as having too many components, involving
+  an unknown object or role, having incorrect numerical data, etc.,
+
+- `OffBoardException`: thrown when a position is off the board.
+
+Recall that, as stated in the section on exception-handling, `ObjectParserException` is a
+subclass of `GameParseException`, and both this latter exception and `OffBoardException` are
+subclasses of `GameModelException`.
+
+Your code will be more readable if the parse method calls auxilliary methods. We suggest the use
+of the following (though this is not obligatory):
+
+```java
+private static Position getPositionFrom(String line) throws ObjectParseException, OffBoardException {...}
+private static String getObjectNameFrom(String line) throws ObjectParseException {...}
+private static Direction getLemmingDirectionFrom(String line) throws ObjectParseException {...}
+private static int getLemmingHeigthFrom(String line) throws ObjectParseException {...}
+private static LemmingRole getLemmingRoleFrom(String line) throws ObjectParseException {...}
+```
+
+These methods can take car of both checking the correct syntax and checking the static semantic
+properties such as whether or not a position is off the board. Note that, like the `parse`
+method of the `CommandGenerator` class, the `parse` method of the  `GameObjectFactory` class
+never returns `null`; if the creation of a game object is not successful, it throws an
+exception
+
+<!-- TOC --><a name="configuracion-juego"></a>
+## Encapsulating the loaded state of the game: the `GameConfiguration` interface
+
+A game state can be represented by an object that stores the different components of such
+a state, namely the value of the game counters and the set of game objects, which we will assume
+to be contained in a newly-created object of the `GameObjectContainer` class. Any object
+representing a game state must provide methods to access these different components of the state,
+i.e. it must implement an interface containing the following method declarations:
+
+ ```java
+	// game status
+	public int getCycle();
+	public int numLemmingsInBoard();
+	public int numLemmingsDead();
+	public int numLemingsExit();
+	public int numLemmingToWin();
+	// game objects
+	public GameObjectContainer getGameObjects();
+ ```
+
+We will define this set of method declarations to be those of a `GameConfiguration` interface,
+to be placed in the `tp1.logic` package.
+If you wish to avoid repeating code, you could define an interface called, for example, `GameCounters`
+containing the first five of the above methods and then inherit the `GameCounters` interface
+in both the `GameConfiguration` interface and the `GameStatus` interface.
+
+
+<!-- TOC --><a name="configuraciones-iniciales"></a>
+## Reading the file data: the `FileGameConfiguration` class
+
+As a general principle, reading from a file must *never* cause a program to crash
+or leave it in an incoherent state. Catching *all* exceptions that could be thrown when reading 
+from a file ensures that the program cannot crash. Loading the file data into a special-purpose
+class which is then only used (in our case as the new state of the game) if and when the data
+has been completely and successfully loaded from file ensures that the program cannot be left
+in an incoherent state. In our case, this special-purpose class is the `FileGameConfiguration`
+class, to be placed in the `tp1.logic` package, which then implements the `GameConfiguration`
+interface. To facilitate ensuring that an incoherent game state is never used as the new game state,
+we perform the loading from file in the constructor of the `FileGameConfiguration`. Thus,
+if the checking of validity is exhaustive, objects of this class that encapsulate an incoherent
+game state can never exist. This constructor has one parameter: a `String` containing the name
+of the file from which the game state is to be loaded:
+
+```java
+public FileGameConfiguration(String fileName) throws GameLoadException;
+```
+
+The constructor can throw the following programmer-defined exception:
+
+- `GameLoadException` (a subclass of `GameModelException`): used to wrap *any* exception thrown
+  during loading, such as `FileNotFoundException`, any operating system exception,
+  `ObjectParserException`, `OffBoardException`, or any other exception thrown due to an
+  incorrect file format. 
+
+Correct file format also includes the condition that the counter data of the first line of
+the file should be coherent with the game object data of the subsequent lines
+(consider the number of lemmings on the board, for example). Notice that this particular
+validation would be easier to implement had the counters been implemented as static attributes
+of the `Lemming` class rather than as instance attributes of the game. However, you are not
+required to implement this validation, though you may do so if you wish. Correct file format
+also includes conditions such as that the direction is a valid direction, counters do not
+contain negative values, etc. If any of these conditions were incorrect, an exception should
+be thrown which would then be wrapped in a `GameLoadException`.
+
+<!-- TOC --><a name="game-load"></a>
+## Modifying the `Game` class to implement the load command
+
+  ***to be added***
+
+<!-- TOC --><a name="load-command-class"></a>
+## The `LoadCommand` class
+
+We can now implement the `LoadCommand` class. The `execute` method could either call a
+`load` method in the `Game` class, passing it the file-name `String` or open an input
+stream to the file and then call a `load` method in the `Game` class, passing it the
+input stream. For consistency of style of implementation across the different commands,
+and as stated in the previous section, we propose the former. After loading the new state,
+the `execute` method of the `LoadCommand` class must display the board.
+
+Regarding the `parse` method, the `load` command could be implemented without parameters,
+the name of the file to be used being stored in an attribute of the `LoadCommand` class, allowing
+only a single saved file, or it could be implemented with one `String` parameter:
+the file name. You are expected to implement the command with a file-name parameter so the
+`parse` method will have to deal with this parameter.
+
+The help message of the `load` command will have the following form:
+
+```
+[DEBUG] Executing: help
+
+Available commands: 
+   ...
+   [l]oad <fileName>: load a state of the game from the text file <fileName>
+   ...
+```
+
+<!-- TOC --><a name="file-exceptions"></a>
+## Errors occuring during the loading of a file
+
+  ***to be added***
+
+
+<!-- TOC --><a name="reset-load-game"></a>
+## Adapting the `reset` method of the `Game` class
+
+  ***to be added***
+
+
+<!-- TOC --><a name="save-command-details"></a>
+## Details of the `save` command (optional)
+
+The implementation of the `save` command is relatively simple. It requires a `SaveCommand`
+class whose `execute` method does one of the following:
+
+- Calls a `save` method of `Game`, passing it the file-name `String`.
+- Opens an output stream to the file and calls a `stringify`[^3] method of `Game`
+  passing it the output stream.
+- Opens an output stream to the file, calls a no-argument `stringify` method of `Game`
+  and writes the text serialization returned by this method to the output stream.
+
+In the first case, the `save` method of `Game` opens an output stream to the file,
+calls a `stringify` method of `Game` and writes the text serialization returned by
+this method to the output stream. In the second case, the `stringify` method of `Game`
+creates the text serialization and writes it to the output stream
+
+For consistency of style of implementation across the different commands, we propose the
+first possibility[^4], so using a `save` method in the `Game` class of the form:
+
+```java
+	public void save(String fileName) throws GameModelException {...}
+```
+
+The `stringify` method of the game, in 
+building its string represention of the current state of the game, calls a `stringify` method
+of the container, which, in building its string representation of the current state of the
+container, calls a `stringify` method of each game object.
+
+[^3]: It could be argued that the Java `toString` method, rather than a `stringify` method should
+be used for this purpose, rather than using it to return the textual representation sent to the
+standard ouput for display. Here, we are influenced by the general principle that the purpose of the
+`toString` method is to produce human-readable output while that of the `stringify` method is to
+produce output to be used in serialization, which need only be machine-readable. Of course, with
+the serialization format defined above, both text representations used by the lemmings program
+could be described as human-readable, so the policy used here is debatable.
+
+[^4]: One could also interpret this serialization as another type of view and have the `execute`
+of the `SaveCommand` class call a method of view which then calls the `stringify` method of `Game`.
+
+Once the output stream is open, serialization should only throw exceptions in the case where a 
+write-error occurs, for example due to some operating system problem; such an exception should
+be caught and wrapped in a `GameModelException` (which would then be caught and wrapped in
+a `CommandExecuteException`).
+
+Regarding the `parse` method of the `SaveCommand`, the simplest implementation supposes that
+the `save` command has no parameters, the name of the file to be used being "hardwired",
+i.e. stored in an attribute of the `SaveCommand` class. Of course, this only allows a single
+saved file. A more sophisticated implementation would use a `save` command with one `String`
+parameter: the filename (to ensure consistent use of a file extension, the usual policy is tha
+the user provides a file name without a file extension and the program then adds this extension).
+The `parse` command would then have to deal with this parameter. Assuming the implementation
+with a file-name parameter, the help message of the `save` command has the following form:
+
+```
+[DEBUG] Executing: help
+
+Available commands: 
+   ...
+   [s]ave <fileName>: save the current state of the game in the text file <fileName>
+   ...
+```
+
+<!-- TOC --><a name="level-conf"></a>
+## Initial configurations of the game (optional)
+
+  ***to be added***
+
 
