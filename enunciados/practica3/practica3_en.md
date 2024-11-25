@@ -5,14 +5,9 @@
 	- [Exceptions in the commands and the controller](#command-exceptions)
 	- [Exceptions in `GameModel`](#gamemodel-exceptions)
 - [File handling](#files)
-	- [Serialization / deserialización](#serialization)
+	- [Serialization / deserialization](#serialization)
 	- [Saving the game state to file: the `save` command](#save-command)
 	- [Loading the game state from file: the `load` command](#load-command)
-	- [Game object factory](#factoria-objetos)
-	- [Encapsulating the loaded state of the game: the `GameConfiguration` class](#configuracion-juego)
-	- [Reading the file data: the `FileGameConfiguration` class](#configuraciones-iniciales)
-	- [Modifying the `Game` class to implement the load command](#game-load)
-	- [The `LoadCommand` class](#load-command-class)
 	- [Errors occuring during the loading of a file](#file-exceptions)
 	- [Adapting the `reset` method of the `Game` class](#reset-load-game)
 	- [Details of the `save` command (optional)](#save-command-details)
@@ -361,9 +356,9 @@ With this procedure, no information is lost since the wrapped exception can be r
 <!-- TOC --><a name="serialization"></a>
 ## Serialization / deserialization
 
-In computing, the term serialization refers to converting the current state of an executing
+In computing, the term *serialization* refers to converting the current state of an executing
 program, or of part of an executing program, into a stream of bytes, usually with the
-objective of saving it to a file or transmitting it on a network. The term deserialization
+objective of saving it to a file or transmitting it on a network. The term *deserialization*
 refers to the inverse process of reconstructing the state of an executing program, or part of
 an executing program, from a stream of bytes. Serialization/deserialization in which the
 generated stream is a text stream is sometimes referred to as stringification/destringification.
@@ -377,7 +372,7 @@ We do not require such a generic serialization/deserialization
 mechanism; our interest is simply to serialize to, and deserialize from, a text stream
 that represents the current state of a lemmings game, with a view
 to writing this state to, and reading this state from, a text file. Note that the textual
-representation produced by the view is not a suitable format for serialization since
+representation currently produced by the view is not a suitable format for serialization since
 deserialization of this format would be a rather complicated enterprise. We therefore
 define a text-serialized format, in which the state of the game is represented as a sequence
 of game elements, each of which is represented as a sequence of values. This format could be
@@ -440,21 +435,21 @@ its presentation until later in this document, see the section
 
 In the following sections we present an implementation of a new command, the `load` command,
 used to read a state of the game from a file. The implementation of the `load` command
-is inevitably more complicated than that of the `save` command. We divide the task of
-implementing this command into the following subtasks:
+is inevitably more complicated than that of the corresponding `save` command. We divide the
+task of implementing this command into the following subtasks:
 
-- create a `GameObjectFactory` class to be used to parse the textual representation of
-  the game objects,
+- [create a `GameObjectFactory` class](#game-object-factory) to be used to parse the textual
+  representation of the game objects,
 
-- define a `GameConfiguration` interface to be implemented by classes representing a game
-  configuration, i.e a valid state of the lemmings game,
+- [define a `GameConfiguration` interface](#game-configuration) to be implemented by classes
+  representing a game configuration, i.e a valid state of the lemmings game,
 
-- create a `FileGameConfiguration` class, responsible for loading a game configuration
-  from file and storing it,
+- [create a `FileGameConfiguration` class](#game-configuration-loader), responsible for
+  loading the serialized data from file and storing it in a game configuration,
 
-- introduce the necessary changes in the `Game` class,
+- [add the implementation of the load command to the `Game` class](#game-load),
 
-- create the `LoadCommand` class.
+- [create the `LoadCommand` class](#load-command-class).
 
 On finishing these changes, we will need to check the exceptions that may be thrown on
 loading a file, though, regarding errors in the content of the file, we recommend first
@@ -465,8 +460,8 @@ Note that the behaviour of the `reset` command will need to be adapted to the ex
 of the `load` command (reset should mean return to the last loaded state).
 
 
-<!-- TOC --><a name="factoria-objetos"></a>
-## Game object factory
+<!-- inner TOC --><a name="game-object-factory"></a>
+### Game object factory
 
 Every line of the above-described serialization format, except the first, contains a textual
 representation of a game object. The deserialization, therefore, must create
@@ -504,8 +499,8 @@ method of the `CommandGenerator` class, the `parse` method of the  `GameObjectFa
 never returns `null`; if the creation of a game object is not successful, it throws an
 exception
 
-<!-- TOC --><a name="configuracion-juego"></a>
-## Encapsulating the loaded state of the game: the `GameConfiguration` interface
+<!-- inner TOC --><a name="game-configuration"></a>
+### Encapsulating the loaded state of the game: the `GameConfiguration` interface
 
 A game state can be represented by an object that stores the different components of such
 a state, namely the value of the game counters and the set of game objects, which we will assume
@@ -531,8 +526,8 @@ containing the first five of the above methods and then inherit the `GameCounter
 in both the `GameConfiguration` interface and the `GameStatus` interface.
 
 
-<!-- TOC --><a name="configuraciones-iniciales"></a>
-## Reading the file data: the `FileGameConfiguration` class
+<!-- inner TOC --><a name="game-configuration-loader"></a>
+### Reading the file data: the `FileGameConfiguration` class
 
 As a general principle, reading from a file must *never* cause a program to crash
 or leave it in an incoherent state. Catching *all* exceptions that could be thrown when reading 
@@ -568,13 +563,13 @@ also includes conditions such as that the direction is a valid direction, counte
 contain negative values, etc. If any of these conditions were incorrect, an exception should
 be thrown which would then be wrapped in a `GameLoadException`.
 
-<!-- TOC --><a name="game-load"></a>
-## Modifying the `Game` class to implement the load command
+<!-- inner TOC --><a name="game-load"></a>
+### Modifying the `Game` class to implement the load command
 
   ***to be added***
 
-<!-- TOC --><a name="load-command-class"></a>
-## The `LoadCommand` class
+<!-- inner TOC --><a name="load-command-class"></a>
+### The `LoadCommand` class
 
 We can now implement the `LoadCommand` class. The `execute` method could either call a
 `load` method in the `Game` class, passing it the file-name `String` or open an input
