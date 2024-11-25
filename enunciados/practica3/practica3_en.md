@@ -2,8 +2,8 @@
 - [Assignment 3: Exception handling and file handling](#practica-3-excepcionesYficheros)
 - [Introduction](#introduccion)
 - [Exception handling](#exceptions)
-	- [Exceptions in the commands and the controller](#command-exceptions)
-	- [Exceptions in `GameModel`](#gamemodel-exceptions)
+	- [Exceptions thrown in the control part of the program](#command-exceptions)
+	- [Exceptions thrown in the model part of the program](#gamemodel-exceptions)
 - [File handling](#files)
 	- [Serialization / deserialization](#serialization)
 	- [Saving the game state to file: the `save` command](#save-command)
@@ -106,7 +106,7 @@ in a package called `tp1.exceptions`.
 
 
 <!-- TOC --><a name="command-exceptions"></a>
-## Exceptions thrown in the control part of the application
+## Exceptions thrown in the control part of the program
 
 We define a new exception class called `CommandException` and two subclasses:
 
