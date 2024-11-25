@@ -338,11 +338,13 @@ With this procedure, no information is lost since the wrapped exception can be r
 <!-- TOC --><a name="serialization"></a>
 ## Serialization / deserialization
 
-In computing, the term *serialization* refers to converting the current state of an executing
-program, or of part of an executing program, into a stream of bytes, usually with the
-objective of saving it to a file or transmitting it on a network. The term *deserialization*
-refers to the inverse process of reconstructing the state of an executing program, or part of
-an executing program, from a stream of bytes. Serialization/deserialization in which the
+In computing, the term *serialization* refers to converting computing structures into a stream
+of bytes usually with the objective of saving this stream to a file or transmitting it on a network.
+Commonly, the structure being serialized is the current state of an executing program, or of part
+of an executing program. The term *deserialization*
+refers to the inverse process of reconstructing the computing structures, commonly the state of
+an executing program, or part of an executing program, from a stream of bytes.
+Serialization/deserialization in which the
 generated stream is a text stream is sometimes referred to as stringification/destringification.
 Clearly, the format used for serialization/stringification should be designed in such a way
 as to facilitate deserialization/destringification.
