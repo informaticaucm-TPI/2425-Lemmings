@@ -612,9 +612,15 @@ Available commands:
 
 Resetting a game that has been loaded from file should place the game in the state it was in immediately
 after the loading took place. This can be accomplished by having the `load` method of game store the
-`FileGameConfiguration` object created during loading in an attribute of game (of type `GameConfiguration`).
-If the value of this attribute is `null`, the standard reset is carried out, otherwise, the game state
-stored in the `FileGameConfiguration` object is used.
+`FileGameConfiguration` object created during loading in an attribute of the `Game` class such as:
+
+```java
+private final GameConfiguration fileloader;
+```
+
+If the value of this attribute is `null`, the standard reset is carried out, otherwise, the last game
+state loaded, the one stored in the `FileGameConfiguration` object that is stored in the `fileLoader`
+attribute of game, is used.
 
 <!-- TOC --><a name="save-command-details"></a>
 ## Details of the `save` command (optional)
