@@ -565,7 +565,8 @@ of the `Lemming` class rather than as instance attributes of the game. However, 
 required to implement this validation, though you may do so if you wish. Correct file format
 also includes conditions such as that the direction is a valid direction, counters do not
 contain negative values, etc. If any of these conditions were incorrect, an exception should
-be thrown which would then be wrapped in a `GameLoadException`.
+be thrown which would then be wrapped in a `GameLoadException`. Again, you are not required
+to implement this validation, though you may do so if you wish.
 
 <!-- inner TOC --><a name="game-load"></a>
 ### Modifying the `Game` class to implement the load command
