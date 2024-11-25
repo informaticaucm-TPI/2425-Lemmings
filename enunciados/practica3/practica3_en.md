@@ -614,13 +614,13 @@ Available commands:
 <!-- TOC --><a name="file-exceptions"></a>
 ## Errors occuring during the loading of a file
 
-  ***to be added***
+  ***to be added on 25/11***
 
 
 <!-- TOC --><a name="reset-load-game"></a>
 ## Adapting the `reset` method of the `Game` class
 
-  ***to be added***
+  ***to be added on 25/11***
 
 
 <!-- TOC --><a name="save-command-details"></a>
