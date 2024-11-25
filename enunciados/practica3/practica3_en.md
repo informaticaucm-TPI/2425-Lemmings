@@ -471,6 +471,7 @@ class, similar to the `LemmingRolesFactory` class, containing the following meth
 ```java
 public GameObject parse(String line, GameWorld game) throws ObjectParserException, OffBoardException;
 ```
+This method throws the following programmer-defined exceptions:
 
 - `ObjectParserException`: thrown when a line cannot be parsed as the textual representation of
   a game object due to some problem with the format such as having too many components, involving
