@@ -501,13 +501,13 @@ never returns `null`; if the creation of a game object is not successful, it thr
 exception
 
 <!-- inner TOC --><a name="game-configuration"></a>
-### Encapsulating the loaded state of the game: the `GameConfiguration` interface
+### Representing the loaded state of the game: the `GameConfiguration` interface
 
-A game state can be represented by an object that stores the different components of such
-a state, namely the value of the game counters and the set of game objects, which we will assume
-to be contained in a newly-created object of the `GameObjectContainer` class. Any object
-representing a game state must provide methods to access these different components of the state,
-i.e. it must implement an interface containing the following method declarations:
+A game state can be encapsulated in an object that stores the different components of such
+a state, namely the value of the game counters and the set of game objects, where we will
+assume that the latter is contained in a newly-created object of the `GameObjectContainer` class.
+Any object representing a game state must provide methods to access the different components
+of this state, i.e. it must implement an interface containing the following method declarations:
 
  ```java
 	// game status
@@ -570,7 +570,18 @@ be thrown which would then be wrapped in a `GameLoadException`.
 <!-- inner TOC --><a name="game-load"></a>
 ### Modifying the `Game` class to implement the load command
 
-  ***to be added***
+We need to add the possibility of loading the state of the game from file to the model
+part of the application. To this end, we add a function called `load` to the `Game` class
+(we will also need to add it to the corresponding interface): 
+
+```java
+	public void load(String fileName) throws GameLoadException {...}
+```
+
+This method simply creates a `FileGameConfiguration` object, typed as a `GameConfiguration`
+and then sets the attributes of the game to the values returned by calls to the methods of the
+`GameConfiguration` interface. It declares that it may throw the exceptions that may be thrown by the  
+constructor of the `FileGameConfiguration` class.
 
 <!-- inner TOC --><a name="load-command-class"></a>
 ### The `LoadCommand` class
