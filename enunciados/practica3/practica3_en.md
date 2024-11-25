@@ -566,8 +566,8 @@ part of the application. To this end, we add a function called `load` to the `Ga
 
 This method simply creates a `FileGameConfiguration` object, typed as a `GameConfiguration`
 and then sets the attributes of the game to the values returned by calls to the methods of the
-`GameConfiguration` interface. It declares that it may throw the exceptions that may be thrown by the  
-constructor of the `FileGameConfiguration` class.
+`GameConfiguration` interface. It declares that it may throw the same exceptions that the
+constructor of the `FileGameConfiguration` class declares it may throw.
 
 <!-- inner TOC --><a name="load-command-class"></a>
 ### The `LoadCommand` class
