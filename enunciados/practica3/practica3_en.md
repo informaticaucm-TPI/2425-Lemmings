@@ -319,23 +319,6 @@ interface:
 	
 as well as an exception class from which all these new exceptions inherit: `GameModelException`
 
-
-<!---
-- `NotAllowedDirectionException`: excepción que se produce al tratar de establecer una dirección del lemming incorrecta (ej. `UP` se puede convertir a una dirección pero no es válida). La utilizaremos en la sección de los ficheros.
-
-	- `GameStateParseException`: excepción que se produce al tratar de parsear un estado del juego en formato texto y no poder convertirlo al estado correspondiente. La veremos en la sección de los ficheros.
-	
-	- `NegativeHeightException`: excepción que se produce al tratar de establecer a un objeto una altura negativa.
-	- `PositionParseException`: excepción que se produce al tratar de parsear una posición y no poder convertir los valores a enteros o no tener el formato adecuado.
-	- `RoleParseException`: excepción que se produce al tratar de parsear un role y no poder convertir al rol correspondiente.
-	- `DirectionParseException`: excepción que se produce al tratar de parsear una dirección y no poder convertirla a la dirección correspondiente.
-	- `HeightParseException`: excepción que se produce al tratar de parsear una altura y no poder convertirla a un entero.
---->
-
-<!--
-- `GameLoadException`: excepción lanzada al tratar de cargar la configuración de juego de un fichero de texto cuando el formato de éste es incorrecto, bien porque en alguna línea del fichero (ver más adelante) no hay suficientes parámetros o bien porque los parámetros son incorrectos (rol desconocido o formato de la posición incorrecto, etc.). Esta excepción caputarará todas las excepciones de tipo `GameParseException` que se produzcan durante la carga del fichero.
--->
-
 The above exceptions are to be thrown by methods of the `GameModel` interface that are called from one or more
 of the `execute` methods of the commands. As already stated, they should be caught in the corresponding `execute`
 method and rethrown, wrapped in a `CommandExecuteException`. For example:
@@ -627,8 +610,11 @@ Available commands:
 <!-- TOC --><a name="reset-load-game"></a>
 ## Adapting the `reset` method of the `Game` class
 
-  ***to be added on 25/11***
-
+Resetting a game that has been loaded from file should place the game in the state it was in immediately
+after the loading took place. This can be accomplished by having the `load` method of game store the
+`FileGameConfiguration` object created during loading in an attribute of game (of type `GameConfiguration`).
+If the value of this attribute is `null`, the standard reset is carried out, otherwise, the game state
+stored in the `FileGameConfiguration` object is used.
 
 <!-- TOC --><a name="save-command-details"></a>
 ## Details of the `save` command (optional)
@@ -699,6 +685,10 @@ Available commands:
 <!-- TOC --><a name="level-conf"></a>
 ## Initial configurations of the game (optional)
 
-  ***to be added on 25/11***
-
-
+The initial configurations of the game could also be stored in the serialized format instead of
+using `initX` methods. The serialized format could either be read from file (in which case, the game
+would need to contain a correspondence between levels and file names) or could be stored in final
+attributes of the game (the strings containing the serialized format could be encapsulated in a Java
+record, for example). The second solution, the better of the two, could then use the
+`FileGameConfiguration` class but modified to use a `StringReader` stream instead of a `FileReader`
+stream.
