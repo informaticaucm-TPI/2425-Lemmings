@@ -610,22 +610,23 @@ Available commands:
 <!-- TOC --><a name="save-command-details"></a>
 ## Details of the `save` command (optional)
 
-The implementation of the `save` command is relatively simple. It requires a `SaveCommand`
-class whose `execute` method does one of the following:
+The implementation of the `save` command is relatively simple. The `execute` method
+of the `SaveCommand` class could be implemented in one of the following ways:
 
-- Calls a `save` method of `Game`, passing it the file-name `String`.
-- Opens an output stream to the file and calls a `stringify`[^3] method of `Game`
-  passing it the output stream.
-- Opens an output stream to the file, calls a no-argument `stringify` method of `Game`
-  and writes the text serialization returned by this method to the output stream.
+- The `execute` method calls a `save` method of `Game`, passing it the file-name `String`.
+- The `execute` method opens an output stream to the file and calls a `stringify`[^3]
+  method of `Game` passing it the output stream.
+- The `execute` method  opens an output stream to the file, calls a no-argument `stringify`
+  method of `Game` and writes the text serialization returned by this method to the output stream.
 
-In the first case, the `save` method of `Game` opens an output stream to the file,
-calls a `stringify` method of `Game` and writes the text serialization returned by
-this method to the output stream. In the second case, the `stringify` method of `Game`
-creates the text serialization and writes it to the output stream
+In the first case, the `save` method of `Game`  is responsible for opening the output stream to
+the file, calling a `stringify` method of `Game` and writing the text serialization returned by
+this method to the output stream. In the second case and third case, there is no `save` method
+in `Game`; in the second, the `stringify` method of `Game` is responsible for writing the text
+serialization to the output stream. 
 
-For consistency of style of implementation across the different commands, we propose the
-first possibility[^4], so using a `save` method in the `Game` class of the form:
+For consistency of style of implementation across the different commands, we propose to implement
+the first of these three possibilities [^4], so using a `save` method in the `Game` class of the form:
 
 ```java
 	public void save(String fileName) throws GameModelException {...}
@@ -638,11 +639,13 @@ container, calls a `stringify` method of each game object.
 
 [^3]: It could be argued that the Java `toString` method, rather than a `stringify` method should
 be used for this purpose, rather than using it to return the textual representation sent to the
-standard ouput for display. Here, we are influenced by the general principle that the purpose of the
-`toString` method is to produce human-readable output while that of the `stringify` method is to
-produce output to be used in serialization, which need only be machine-readable. Of course, with
-the serialization format defined above, both text representations used by the lemmings program
-could be described as human-readable, so the policy used here is debatable.
+standard ouput for display. In proposing the use of a `stringify` method, we follow the principle that
+the purpose of the `toString` method is to produce human-readable output (the Java documentation
+says it should produce "a concise but informative representation that is easy for a person to read")
+while that of the `stringify` method is to produce output to be used in serialization, which need
+only be machine-readable. Of course, with the serialization format defined above, both text
+representations used by the lemmings program are eminently human-readable, so the policy used
+here is debatable.
 
 [^4]: One could also interpret this serialization as another type of view and have the `execute`
 of the `SaveCommand` class call a method of view which then calls the `stringify` method of `Game`.
