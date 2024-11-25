@@ -453,8 +453,8 @@ task of implementing this command into the following subtasks:
 
 On finishing these changes, we will need to check the exceptions that may be thrown on
 loading a file, though, regarding errors in the content of the file, we recommend first
-developing the code on the assumption that the file contains no such errors and then
-adjusting the code so that it can handle the exceptions that may be produced.
+developing the code under the assumption that the file contains no such errors and then
+modifying it to add the handling of the exceptions that may be produced.
 
 Note that the behaviour of the `reset` command will need to be adapted to the existence
 of the `load` command (reset should mean return to the last loaded state).
