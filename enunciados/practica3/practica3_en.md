@@ -457,7 +457,7 @@ This method throws the following programmer-defined exceptions:
 
 - `ObjectParserException`: thrown when a line cannot be parsed as the textual representation of
   a game object due to some problem with the format such as having too many components, involving
-  an unknown object or and unknown role, numerical data containing non-digit characters,
+  an unknown object or and unknown role, numerical data containing non-digit characters, etc.
 
 - `OffBoardException`: thrown when a position is off the board (this also covers negative values
   being used).
