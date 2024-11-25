@@ -493,7 +493,7 @@ private static int getLemmingHeigthFrom(String line) throws ObjectParseException
 private static LemmingRole getLemmingRoleFrom(String line) throws ObjectParseException {...}
 ```
 
-These methods can take car of both checking the correct syntax and checking the static semantic
+These methods can take care of both checking the correct syntax and checking the static semantic
 properties such as whether or not a position is off the board. Note that, like the `parse`
 method of the `CommandGenerator` class, the `parse` method of the  `GameObjectFactory` class
 never returns `null`; if the creation of a game object is not successful, it throws an
@@ -535,15 +535,18 @@ from a file ensures that the program cannot crash. Loading the file data into a 
 class which is then only used (in our case as the new state of the game) if and when the data
 has been completely and successfully loaded from file ensures that the program cannot be left
 in an incoherent state. In our case, this special-purpose class is the `FileGameConfiguration`
-class, to be placed in the `tp1.logic` package, which then implements the `GameConfiguration`
+class, to be placed in the `tp1.logic` package, which also implements the `GameConfiguration`
 interface. To facilitate ensuring that an incoherent game state is never used as the new game state,
 we perform the loading from file in the constructor of the `FileGameConfiguration`. Thus,
 if the checking of validity is exhaustive, objects of this class that encapsulate an incoherent
-game state can never exist. This constructor has one parameter: a `String` containing the name
-of the file from which the game state is to be loaded:
+game state can never exist. This constructor has two parameters:
+
+- a `String` containing the name of the file from which the game state is to be loaded
+- the game, typed as `GameWorld`, to be passed to the constructor of the game objects (via
+  the `parse` method of each game object, via the `parse` method of `GameObjectFactory`).
 
 ```java
-public FileGameConfiguration(String fileName) throws GameLoadException;
+public FileGameConfiguration(String fileName, GameWorld game) throws GameLoadException;
 ```
 
 The constructor can throw the following programmer-defined exception:
