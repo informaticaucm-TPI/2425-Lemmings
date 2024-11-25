@@ -8,9 +8,9 @@
 	- [Serialization / deserialization](#serialization)
 	- [Saving the game state to file: the `save` command](#save-command)
 	- [Loading the game state from file: the `load` command](#load-command)
-	- [*Adapting the `reset` method of the `Game` class*](#reset-load-game)
+	- [Adapting the `reset` method of the `Game` class](#reset-load-game)
 	- [Details of the `save` command (optional)](#save-command-details)
-	- [*Initial configurations of the game (optional)*](#level-conf)
+	- [Initial configurations of the game (optional)](#level-conf)
 <!-- TOC end -->
 
 <!-- TOC --><a name="practica-3-excepcionesYficheros"></a>
