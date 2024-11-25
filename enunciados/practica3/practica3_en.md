@@ -611,11 +611,11 @@ Available commands:
 ## Adapting the `reset` method of the `Game` class
 
 Resetting a game that has been loaded from file should place the game in the state it was in immediately
-after the loading took place. This can be accomplished by having the `load` method of game store the
-`FileGameConfiguration` object created during loading in an attribute of the `Game` class such as:
+after the loading took place. This can be accomplished by having the `load` method of the `Game` class 
+store the `FileGameConfiguration` object created during loading in an attribute of the `Game` class, e.g.:
 
 ```java
-private final GameConfiguration fileloader;
+private GameConfiguration fileloader;
 ```
 
 If the value of this attribute is `null`, the standard reset is carried out, otherwise, the last game
