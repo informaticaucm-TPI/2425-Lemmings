@@ -675,7 +675,7 @@ Regarding the `parse` method of the `SaveCommand`, the simplest implementation s
 the `save` command has no parameters, the name of the file to be used being "hardwired",
 i.e. stored in an attribute of the `SaveCommand` class. Of course, this only allows a single
 saved file. A more sophisticated implementation would use a `save` command with one `String`
-parameter: the filename (to ensure consistent use of a file extension, the usual policy is tha
+parameter: the filename (to ensure consistent use of a file extension, the usual policy is that
 the user provides a file name without a file extension and the program then adds this extension).
 The `parse` command would then have to deal with this parameter. Assuming the implementation
 with a file-name parameter, the help message of the `save` command has the following form:
