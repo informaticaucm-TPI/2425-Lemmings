@@ -55,7 +55,7 @@ give some information about their implementation. The section is divided into tw
 the first dealing with exceptions that may be thrown in the control part of the
 application, in particular, in the parsing of the user input, the second dealing with
 exceptions that may be thrown in the model part of the application, in particular, in
-the execution of the commands.
+the implementation of the execution of the commands.
 
 It should be pointed out that file handling inevitably involves exception handling, particularly
 when reading data from files, which is why these two topics are often introduced to students at
