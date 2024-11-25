@@ -693,8 +693,8 @@ Available commands:
 
 The initial configurations of the game could also be stored in the serialized format instead of
 using `initX` methods. The serialized format could either be read from file (in which case, the game
-would need to contain a correspondence between levels and file names) or could be stored in final
-attributes of the game (the strings containing the serialized format could be encapsulated in a Java
-record, for example). The second solution, the better of the two, could then use the
+would need to contain a correspondence between levels and file names) or could be stored in `final`
+attributes of the game (the `String`s containing the serialized format could be encapsulated in a
+Java record, for example). The second solution, the better of the two, could then use the
 `FileGameConfiguration` class but modified to use a `StringReader` stream instead of a `FileReader`
 stream.
