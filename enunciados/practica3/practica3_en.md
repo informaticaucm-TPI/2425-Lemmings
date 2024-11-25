@@ -8,7 +8,6 @@
 	- [Serialization / deserialization](#serialization)
 	- [Saving the game state to file: the `save` command](#save-command)
 	- [Loading the game state from file: the `load` command](#load-command)
-	- [*Errors occuring during the loading of a file*](#file-exceptions)
 	- [*Adapting the `reset` method of the `Game` class*](#reset-load-game)
 	- [Details of the `save` command (optional)](#save-command-details)
 	- [*Initial configurations of the game (optional)*](#level-conf)
@@ -280,7 +279,7 @@ the following error messages (notice the two messages, one from each level of ex
 	```
 
 <!--- PARSER errors
-- Mensaje al intentar establecer un rol en una posición no valida:
+- Trying to change the role of a lemming in an invalid position:
 
 	```
 	[DEBUG] Executing: setRole Walker None 2
@@ -289,7 +288,7 @@ the following error messages (notice the two messages, one from each level of ex
 	[ERROR] Error: Invalid position: (None,3)
 	```
 
-- - Mensaje al intentar establecer un rol inexistente:
+- Trying to set the role of the lemming to an unknown role:
 
 	```
 	[DEBUG] Executing: setRole Slepper A 2
@@ -475,9 +474,10 @@ This method throws the following programmer-defined exceptions:
 
 - `ObjectParserException`: thrown when a line cannot be parsed as the textual representation of
   a game object due to some problem with the format such as having too many components, involving
-  an unknown object or role, having incorrect numerical data, etc.,
+  an unknown object or and unknown role, numerical data containing non-digit characters,
 
-- `OffBoardException`: thrown when a position is off the board.
+- `OffBoardException`: thrown when a position is off the board (this also covers negative values
+  being used).
 
 Recall that, as stated in the section on exception-handling, `ObjectParserException` is a
 subclass of `GameParseException`, and both this latter exception and `OffBoardException` are
@@ -532,7 +532,9 @@ in both the `GameConfiguration` interface and the `GameStatus` interface.
 
 As a general principle, reading from a file must *never* cause a program to crash
 or leave it in an incoherent state. Catching *all* exceptions that could be thrown when reading 
-from a file ensures that the program cannot crash. Loading the file data into a special-purpose
+from a file ensures that the program cannot crash. If the load fails, the program can handle
+the exception, informing the user, and continue the game exactly as if the load had not been
+attempted. Loading the file data into a special-purpose
 class which is then only used (in our case as the new state of the game) if and when the data
 has been completely and successfully loaded from file ensures that the program cannot be left
 in an incoherent state. In our case, this special-purpose class is the `FileGameConfiguration`
@@ -614,8 +616,14 @@ Available commands:
 <!-- TOC --><a name="file-exceptions"></a>
 ## Errors occuring during the loading of a file
 
-  ***to be added on 25/11***
+<!--
 
+***** not used since all these errors have already been discussed and with english-group spec.
+***** more than two error messages may be produced (there are more levels of wrapping)
+
+## Errores durante la carga del fichero
+
+-->
 
 <!-- TOC --><a name="reset-load-game"></a>
 ## Adapting the `reset` method of the `Game` class
