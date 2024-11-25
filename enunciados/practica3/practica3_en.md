@@ -613,15 +613,14 @@ Available commands:
    ...
 ```
 
-<!-- TOC --><a name="file-exceptions"></a>
-## Errors occuring during the loading of a file
-
 <!--
 
-***** not used since all these errors have already been discussed and with english-group spec.
-***** more than two error messages may be produced (there are more levels of wrapping)
+## Errors occuring during the loading of a file
 
-## Errores durante la carga del fichero
+***** This section is not present in the english version since all of the errors have already been
+***** discussed and all of the execution traces in the spanish version show a maximum of two error
+***** messages being displayed while in the english-group spec. more than two may be produced
+***** (there are more levels of wrapping).
 
 -->
 
