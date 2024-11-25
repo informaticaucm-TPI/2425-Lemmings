@@ -569,7 +569,7 @@ be thrown which would then be wrapped in a `GameLoadException`. Again, you are n
 to implement this validation, though you may do so if you wish.
 
 <!-- inner TOC --><a name="game-load"></a>
-### Modifying the `Game` class to implement the load command
+### Adding the implementation of the load command to the `Game` class
 
 We need to add the possibility of loading the state of the game from file to the model
 part of the application. To this end, we add a function called `load` to the `Game` class
